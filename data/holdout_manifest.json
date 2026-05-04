@@ -1,0 +1,104 @@
+{
+  "generated_at": "2026-05-04T18:36:44.715730+00:00",
+  "seed": 42,
+  "loc_floor": 3,
+  "min_per_cell": 15,
+  "corpus_size_after_filters": 96718,
+  "n_calibration_excluded": 0,
+  "n_dropped_below_loc_floor": 4352,
+  "sample_size": 200,
+  "stratification": {
+    "method": "three-phase: per-cell minimums + proportional fill + minority top-up",
+    "min_per_cell_target": 15,
+    "minority_definition": "any principle score < 2"
+  },
+  "phase1_cell_status": {
+    "srp_class_0": [
+      "filled",
+      15
+    ],
+    "srp_class_1": [
+      "filled",
+      15
+    ],
+    "srp_class_2": [
+      "filled",
+      15
+    ],
+    "ocp_class_0": [
+      "filled",
+      11
+    ],
+    "ocp_class_1": [
+      "filled",
+      1
+    ],
+    "ocp_class_2": [
+      "already_met",
+      0
+    ],
+    "dip_class_0": [
+      "already_met",
+      0
+    ],
+    "dip_class_1": [
+      "filled",
+      1
+    ],
+    "dip_class_2": [
+      "already_met",
+      0
+    ]
+  },
+  "score_distribution": {
+    "srp": {
+      "2": 144,
+      "0": 20,
+      "1": 36
+    },
+    "ocp": {
+      "2": 143,
+      "1": 38,
+      "0": 19
+    },
+    "dip": {
+      "1": 71,
+      "2": 96,
+      "0": 33
+    }
+  },
+  "label_distribution": {
+    "srp": {
+      "Compliant": 144,
+      "Violated": 20,
+      "Partial": 36
+    },
+    "ocp": {
+      "Compliant": 143,
+      "Partial": 38,
+      "Violated": 19
+    },
+    "dip": {
+      "Partial": 71,
+      "Compliant": 96,
+      "Violated": 33
+    }
+  },
+  "project_distribution": {
+    "selenium": 19,
+    "struts": 39,
+    "jackson-databind": 32,
+    "fitnesse": 28,
+    "commons-lang": 12,
+    "jmeter": 31,
+    "hibernate-orm": 19,
+    "junit5": 20
+  },
+  "needs_more_context_in_sample": 115,
+  "method_loc_stats": {
+    "min": 3,
+    "max": 233,
+    "median": 8.0,
+    "mean": 15.845
+  }
+}

@@ -1,0 +1,122 @@
+<style>
+  .rubric-doc { font-size: 13px; line-height: 1.55; color: #222; }
+  .rubric-doc h4 { margin: 14px 0 6px; font-size: 14px; color: #1a1a1a; }
+  .rubric-doc h5 { margin: 10px 0 4px; font-size: 13px; color: #2469d4; font-weight: 600; }
+  .rubric-doc ul { margin: 4px 0 8px 18px; padding: 0; }
+  .rubric-doc li { margin-bottom: 3px; }
+  .rubric-doc .scale { background: #f4f7fb; border-left: 3px solid #2469d4; padding: 8px 12px; margin: 6px 0 10px; font-size: 12.5px; }
+  .rubric-doc .scale b { font-family: ui-monospace, Menlo, monospace; }
+  .rubric-doc .principle { border-top: 1px solid #ddd; padding-top: 10px; margin-top: 12px; }
+  .rubric-doc .important { background: #fffbe6; border-left: 3px solid #d4a017; padding: 6px 10px; font-size: 12.5px; margin: 6px 0; }
+  .rubric-doc code { background: #eef; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+  .rubric-doc .note { color: #666; font-size: 12px; font-style: italic; }
+</style>
+
+<div class="rubric-doc">
+
+<h4>Method-level scoring rubric</h4>
+
+<p>You are scoring a <strong>single Java method</strong> extracted from a larger system. You are <em>not</em> inferring intent or domain meaning. You are scoring observable structural signals only.</p>
+
+<p>Identifiers may have been consistently renamed (e.g., <code>x1</code>, <code>x2</code>). <strong>Do not infer semantics from names.</strong></p>
+
+<div class="scale">
+<b>0</b> = Violated (clear structural evidence)<br>
+<b>1</b> = Partial / Uncertain (mixed signals OR insufficient context)<br>
+<b>2</b> = Compliant (clear structural evidence)<br>
+<b>N/A</b> = Use only if the method is non-Java code, garbled, or otherwise not assessable. <em>Insufficient context is not N/A — it is score 1.</em>
+</div>
+
+<p class="note">Be conservative. If the method alone is insufficient to make a confident call, score 1.</p>
+
+<div class="principle">
+<h4>1. SRP — Single Responsibility (method cohesion)</h4>
+<p>Score whether the method does one cohesive responsibility.</p>
+
+<h5>Score 0 — Violated</h5>
+<ul>
+  <li>Multiple distinct responsibilities present (e.g., validates + persists + logs), <strong>OR</strong></li>
+  <li>Unrelated side effects mixed (e.g., updates state + UI + IO).</li>
+</ul>
+
+<h5>Score 2 — Compliant</h5>
+<ul>
+  <li>One focused responsibility, <strong>OR</strong></li>
+  <li>Delegates via at most 3 calls and contains no independent logic beyond delegation sequencing (thin orchestrator).</li>
+</ul>
+
+<h5>Score 1 — Partial / Uncertain</h5>
+<ul>
+  <li>SRP judgement depends on class-level role or broader workflow not visible in this method alone.</li>
+</ul>
+</div>
+
+<div class="principle">
+<h4>2. OCP — Modification-risk signals (method-level proxy)</h4>
+
+<p>You are <em>not</em> declaring true OCP compliance for the system. You are scoring whether this method structurally encodes variation such that future requirements likely require modifying <strong>this</strong> method.</p>
+
+<h5>Score 0 — Violated</h5>
+<ul>
+  <li><code>if/else</code> or <code>switch</code> chain with 3+ branches encoding behavioral variants, <strong>OR</strong></li>
+  <li>Hard-coded policy thresholds / magic constants that appear to represent changeable policy, <strong>OR</strong></li>
+  <li>Repeated copy-modify style branches.</li>
+</ul>
+
+<h5>Score 2 — Compliant</h5>
+<ul>
+  <li>Behavior is delegated to collaborators / polymorphic calls, <strong>and</strong> branching is minimal (0–2 branches) and not encoding variants.</li>
+</ul>
+
+<h5>Score 1 — Partial / Uncertain</h5>
+<ul>
+  <li>You cannot see whether delegation is polymorphic / strategy-based, <strong>OR</strong></li>
+  <li>Branching exists but could be simple control flow without representing an extensibility point.</li>
+</ul>
+</div>
+
+<div class="principle">
+<h4>3. DIP — Dependency Inversion (replaceable-dependency signals)</h4>
+
+<p>Score whether the method introduces tight coupling to <em>replaceable concrete collaborators</em>.</p>
+
+<h5>Score 0 — Violated</h5>
+<ul>
+  <li>Instantiates a likely replaceable collaborator/service (e.g., a repository, network client, UI subsystem, persistence service) directly inside the method, <strong>OR</strong></li>
+  <li>Uses static singletons / globals for replaceable collaborators, <strong>OR</strong></li>
+  <li>Strong framework coupling that acts as a direct dependency (not just DTOs / events).</li>
+</ul>
+
+<div class="important">
+<strong>The following are NOT DIP violations:</strong>
+<ul>
+  <li>Instantiating collections (<code>ArrayList</code>, <code>HashMap</code>, etc.), strings, primitives, simple data/value objects, iterators/enumerators</li>
+  <li>Creating <code>Exception</code>s</li>
+  <li>Creating small helper objects local to the method, when not a replaceable external collaborator</li>
+</ul>
+</div>
+
+<h5>Score 2 — Compliant</h5>
+<ul>
+  <li>Dependencies are injected via parameters/fields (as abstractions), <strong>OR</strong></li>
+  <li>No replaceable dependencies appear in the method.</li>
+</ul>
+
+<h5>Score 1 — Partial / Uncertain</h5>
+<ul>
+  <li>A <code>new X(...)</code> appears, but you cannot determine whether <code>X</code> is a replaceable collaborator vs. a value/helper type.</li>
+</ul>
+</div>
+
+<div class="principle">
+<h4>Scoring discipline</h4>
+<ul>
+  <li><strong>Score the method as written, not the imagined system around it.</strong> If a judgement requires seeing the class, the inheritance hierarchy, or other modules, that's score 1, not score 0 or 2.</li>
+  <li><strong>Do not infer semantics from method or variable names.</strong> Identifiers may have been renamed.</li>
+  <li><strong>Test code is fair game.</strong> A test method that instantiates a service-like collaborator is still a DIP-0 signal at the method level.</li>
+  <li><strong>Empty bodies should usually score 1 with the comment "empty body".</strong> They give no signal either way.</li>
+  <li><strong>Use the comment field</strong> when a case is unusual, when you suspect the rubric does not quite cover it, or when you went back and forth on a decision.</li>
+</ul>
+</div>
+
+</div>
