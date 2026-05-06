@@ -1,0 +1,2079 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Calibration Session Worksheet</title>
+<style>
+  @media print {
+    .case { page-break-after: always; }
+    .header { page-break-after: always; }
+  }
+  body { font-family: -apple-system, system-ui, "Segoe UI", sans-serif; max-width: 900px; margin: 20px auto; padding: 0 30px; color: #222; line-height: 1.5; }
+  h1 { font-size: 22px; }
+  h2 { font-size: 18px; border-bottom: 2px solid #2469d4; padding-bottom: 4px; }
+  h3 { font-size: 15px; margin-bottom: 4px; }
+  .header { background: #fafafa; border: 1px solid #ddd; padding: 16px 20px; border-radius: 6px; margin-bottom: 24px; }
+  .case { border: 1px solid #ccc; border-radius: 6px; padding: 16px 20px; margin-bottom: 28px; background: white; }
+  .case-meta { font-size: 12px; color: #555; margin-bottom: 6px; }
+  .case-meta code { background: #f0f0f0; padding: 1px 5px; border-radius: 3px; word-break: break-all; }
+  pre.code { background: #1e1e1e; color: #e8e8e8; padding: 12px; border-radius: 4px; overflow-x: auto; font-size: 12.5px; line-height: 1.45; max-height: 380px; }
+  .scores { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; padding: 10px; background: #fff8e1; border-left: 3px solid #d4a017; }
+  .scores div { font-size: 13px; }
+  .rubric-box { background: #f4f7fb; border-left: 3px solid #2469d4; padding: 10px 14px; margin: 10px 0; font-size: 13px; }
+  .rubric-box ul { margin: 4px 0 0 18px; padding: 0; }
+  .rubric-box li { margin-bottom: 3px; }
+  .decision { background: #f0fff0; border: 1px dashed #4a9; padding: 12px 16px; margin-top: 12px; }
+  .decision label { display: block; margin: 6px 0 2px; font-weight: 600; font-size: 13px; }
+  .decision input[type=text], .decision textarea { width: 100%; box-sizing: border-box; padding: 6px; font-family: inherit; font-size: 13px; border: 1px solid #aaa; border-radius: 3px; }
+  .checkbox-row { display: flex; gap: 16px; align-items: center; }
+  .checkbox-row label { font-weight: 400; font-size: 13px; }
+  .session-info { font-size: 13px; color: #444; }
+</style>
+</head>
+<body>
+
+
+<div class="header">
+  <h1>Calibration Session Worksheet</h1>
+  <p class="session-info">
+    This worksheet contains <strong>35</strong> methods where the two raters
+    gave opposite-extreme scores (one rated <em>Violated</em>, the other
+    <em>Compliant</em>). These are the most informative cases for aligning
+    rubric application.
+  </p>
+  <ul class="session-info"><li>DIP: 14 extreme cases</li><li>SRP: 12 extreme cases</li><li>OCP: 9 extreme cases</li></ul>
+  <p class="session-info"><strong>Process for each case:</strong></p>
+  <ol class="session-info">
+    <li>Read the method silently (1 minute).</li>
+    <li>Each rater explains their score and reasoning.</li>
+    <li>Compare to the rubric criterion shown.</li>
+    <li>Agree on a final score (0, 1, or 2). If still uncertain, mark "1".</li>
+    <li>Write a one-line rationale. This will become a calibration note.</li>
+  </ol>
+  <p class="session-info"><strong>Time budget:</strong> ~2 minutes per case = 70 minutes for 35 cases. Take a 10-minute break halfway through.</p>
+</div>
+
+
+<div class="case">
+  <h3>Case 1 of 35: SRP</h3>
+  <div class="case-meta">
+    <strong>skipSpecialPages</strong> &middot;
+    project <code>fitnesse</code> &middot;
+    LOC <code>8</code><br>
+    <code>systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/files/PublisherTest.java:72-79</code>
+  </div>
+  <pre class="code">public void skipSpecialPages () {
+    WikiPageUtil.addPage (root, PathParser.parse (&quot;PageHeader&quot;), &quot;header&quot;);
+    WikiPageUtil.addPage (root, PathParser.parse (&quot;PageFooter&quot;), &quot;footer&quot;);
+    WikiPageUtil.addPage (root, PathParser.parse (&quot;files&quot;), &quot;files&quot;);
+    Publisher publisher = new Publisher (TEMPLATE, &quot;out&quot;, root.getPageCrawler (), this :: writer);
+    publisher.traverse (root);
+    Assert.assertEquals (&quot;out/root.html&quot;, paths);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for SRP (Single Responsibility — method cohesion):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Multiple distinct responsibilities OR unrelated side effects mixed.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Cannot tell from method alone (depends on class-level role).</li>
+      <li><strong>2 (Compliant):</strong> One focused responsibility OR thin orchestrator (≤3 delegated calls).</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_0_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_0_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_0_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 2 of 35: SRP</h3>
+  <div class="case-meta">
+    <strong>replacementsWithDifferentTextEvaluatedToSameMethodTwoParams</strong> &middot;
+    project <code>fitnesse</code> &middot;
+    LOC <code>28</code><br>
+    <code>systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/refactoring/SearchReplaceMethodResponderTest.java:103-130</code>
+  </div>
+  <pre class="code">public void replacementsWithDifferentTextEvaluatedToSameMethodTwoParams () throws Exception {
+    WikiPageUtil.addPage (somePage, PathParser.parse (&quot;ChildPage1&quot;), &quot;|update value|param|with value|newParam|&quot;);
+    WikiPageUtil.addPage (somePage, PathParser.parse (&quot;ChildPage2&quot;), &quot;|update|param|value with|newParam|value|&quot;);
+    WikiPageUtil.addPage (somePage, PathParser.parse (&quot;ChildPage3&quot;), &quot;|update|param|value with value|newParam|&quot;);
+    WikiPageUtil.addPage (somePage, PathParser.parse (&quot;ChildPage4&quot;), &quot;|ensure|update value|param|with value|newParam|&quot;);
+    WikiPageUtil.addPage (somePage, PathParser.parse (&quot;ChildPage5&quot;), &quot;|reject|update value|param|with value|newParam|&quot;);
+    WikiPageUtil.addPage (somePage, PathParser.parse (&quot;ChildPage6&quot;), &quot;|check|update value|param|with value|newParam|someValue|&quot;);
+    WikiPageUtil.addPage (somePage, PathParser.parse (&quot;ChildPage7&quot;), &quot;|check not|update value|param|with value|newParam|someValue|&quot;);
+    WikiPageUtil.addPage (somePage, PathParser.parse (&quot;ChildPage8&quot;), &quot;|note|update value|param|with value|newParam|&quot;);
+    WikiPageUtil.addPage (somePage, PathParser.parse (&quot;ChildPage9&quot;), &quot;| |update value|param|with value|newParam|&quot;);
+    WikiPageUtil.addPage (somePage, PathParser.parse (&quot;ChildPage10&quot;), &quot;|show|update value|param|with value|newParam|&quot;);
+    WikiPageUtil.addPage (somePage, PathParser.parse (&quot;ChildPage11&quot;), &quot;|$value=|update value|param|with value|newParam|&quot;);
+    String content = getResponseContentUsingSearchReplace (&quot;|update value|param|with value|newParam|&quot;, &quot;|updated value|param|with value|newParam|&quot;);
+    assertThat (content, containsString (&quot;ChildPage1&quot;));
+    assertThat (content, containsString (&quot;ChildPage2&quot;));
+    assertThat (content, containsString (&quot;ChildPage3&quot;));
+    assertThat (content, containsString (&quot;ChildPage4&quot;));
+    assertThat (content, containsString (&quot;ChildPage5&quot;));
+    assertThat (content, containsString (&quot;ChildPage6&quot;));
+    assertThat (content, containsString (&quot;ChildPage7&quot;));
+    assertThat (content, containsString (&quot;ChildPage8&quot;));
+    assertThat (content, containsString (&quot;ChildPage9&quot;));
+    assertThat (content, containsString (&quot;ChildPage10&quot;));
+    assertThat (content, containsString (&quot;ChildPage11&quot;));
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for SRP (Single Responsibility — method cohesion):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Multiple distinct responsibilities OR unrelated side effects mixed.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Cannot tell from method alone (depends on class-level role).</li>
+      <li><strong>2 (Compliant):</strong> One focused responsibility OR thin orchestrator (≤3 delegated calls).</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_1_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_1_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_1_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 3 of 35: SRP</h3>
+  <div class="case-meta">
+    <strong>findFilesAndFolders</strong> &middot;
+    project <code>fitnesse</code> &middot;
+    LOC <code>11</code><br>
+    <code>systems/Projects/SolidLeaning/fitnesse/test/fitnesse/wiki/fs/DiskFileSystemTest.java:24-34</code>
+  </div>
+  <pre class="code">public void findFilesAndFolders () throws IOException {
+    new File (rootDir, &quot;DirName&quot;).createNewFile ();
+    new File (rootDir, &quot;filename&quot;).createNewFile ();
+    new File (rootDir, &quot;CVS&quot;).createNewFile ();
+    List &lt; String &gt; listing = Arrays.asList (new DiskFileSystem ().list (rootDir));
+    assertEquals (listing.toString (), 2, listing.size ());
+    assertTrue (&quot;no DirName found&quot;, listing.contains (&quot;DirName&quot;));
+    assertTrue (&quot;no filename found&quot;, listing.contains (&quot;filename&quot;));
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for SRP (Single Responsibility — method cohesion):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Multiple distinct responsibilities OR unrelated side effects mixed.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Cannot tell from method alone (depends on class-level role).</li>
+      <li><strong>2 (Compliant):</strong> One focused responsibility OR thin orchestrator (≤3 delegated calls).</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_2_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_2_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_2_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 4 of 35: SRP</h3>
+  <div class="case-meta">
+    <strong>serialize</strong> &middot;
+    project <code>jackson-databind</code> &middot;
+    LOC <code>44</code><br>
+    <code>systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/ser/std/StdKeySerializers.java:154-197</code>
+  </div>
+  <pre class="code">public void serialize (Object value, JsonGenerator g, SerializerProvider provider) throws IOException {
+    switch (_typeId) {
+        case TYPE_DATE :
+            provider.defaultSerializeDateKey ((Date) value, g);
+            break;
+        case TYPE_CALENDAR :
+            provider.defaultSerializeDateKey (((Calendar) value).getTimeInMillis (), g);
+            break;
+        case TYPE_CLASS :
+            g.writeFieldName (((Class &lt; ? &gt;) value).getName ());
+            break;
+        case TYPE_ENUM :
+            {
+                String key;
+                if (provider.isEnabled (SerializationFeature.WRITE_ENUMS_USING_TO_STRING)) {
+                    key = value.toString ();
+                }
+                else {
+                    Enum &lt; ? &gt; e = (Enum &lt; ? &gt;) value;
+                    if (provider.isEnabled (SerializationFeature.WRITE_ENUM_KEYS_USING_INDEX)) {
+                        key = String.valueOf (e.ordinal ());
+                    }
+                    else {
+                        key = e.name ();
+                    }
+                }
+                g.writeFieldName (key);
+            }
+            break;
+        case TYPE_INTEGER :
+        case TYPE_LONG :
+            g.writeFieldId (((Number) value).longValue ());
+            break;
+        case TYPE_BYTE_ARRAY :
+            {
+                String encoded = provider.getConfig ().getBase64Variant ().encode ((byte []) value);
+                g.writeFieldName (encoded);
+            }
+            break;
+        case TYPE_TO_STRING :
+        default :
+            g.writeFieldName (value.toString ());
+    }
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for SRP (Single Responsibility — method cohesion):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Multiple distinct responsibilities OR unrelated side effects mixed.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Cannot tell from method alone (depends on class-level role).</li>
+      <li><strong>2 (Compliant):</strong> One focused responsibility OR thin orchestrator (≤3 delegated calls).</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_3_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_3_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_3_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 5 of 35: SRP</h3>
+  <div class="case-meta">
+    <strong>setupTest</strong> &middot;
+    project <code>jmeter</code> &middot;
+    LOC <code>31</code><br>
+    <code>systems/Projects/jmeter-master/src/components/src/main/java/org/apache/jmeter/visualizers/backend/graphite/GraphiteBackendListenerClient.java:301-331</code>
+  </div>
+  <pre class="code">public void setupTest (BackendListenerContext context) throws Exception {
+    String graphiteMetricsSenderClass = context.getParameter (GRAPHITE_METRICS_SENDER);
+    String graphiteHost = context.getParameter (GRAPHITE_HOST);
+    int graphitePort = context.getIntParameter (GRAPHITE_PORT, DEFAULT_PLAINTEXT_PROTOCOL_PORT);
+    summaryOnly = context.getBooleanParameter (SUMMARY_ONLY, true);
+    samplersList = context.getParameter (SAMPLERS_LIST, &quot;&quot;);
+    useRegexpForSamplersList = context.getBooleanParameter (USE_REGEXP_FOR_SAMPLERS_LIST, false);
+    String rootMetricsPrefix = context.getParameter (ROOT_METRICS_PREFIX, DEFAULT_METRICS_PREFIX);
+    String [] percentilesStringArray = context.getParameter (PERCENTILES, DEFAULT_METRICS_PREFIX).split (SEPARATOR);
+    okPercentiles = new HashMap &lt; &gt; (percentilesStringArray.length);
+    koPercentiles = new HashMap &lt; &gt; (percentilesStringArray.length);
+    allPercentiles = new HashMap &lt; &gt; (percentilesStringArray.length);
+    Arrays.stream (percentilesStringArray).map (String :: trim).filter (StringUtils :: isNotEmpty).forEach (this :: initPercentileMaps);
+    Class &lt; ? &gt; clazz = Class.forName (graphiteMetricsSenderClass);
+    this.graphiteMetricsManager = (GraphiteMetricsSender) clazz.getDeclaredConstructor ().newInstance ();
+    graphiteMetricsManager.setup (graphiteHost, graphitePort, rootMetricsPrefix);
+    if (useRegexpForSamplersList) {
+        pattern = Pattern.compile (samplersList);
+    }
+    else {
+        String [] samplers = samplersList.split (SEPARATOR);
+        samplersToFilter = new HashSet &lt; &gt; ();
+        Collections.addAll (samplersToFilter, samplers);
+    }
+    scheduler = Executors.newScheduledThreadPool (MAX_POOL_SIZE);
+    this.timerHandle = scheduler.scheduleAtFixedRate (this, SEND_INTERVAL, SEND_INTERVAL, TimeUnit.SECONDS);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for SRP (Single Responsibility — method cohesion):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Multiple distinct responsibilities OR unrelated side effects mixed.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Cannot tell from method alone (depends on class-level role).</li>
+      <li><strong>2 (Compliant):</strong> One focused responsibility OR thin orchestrator (≤3 delegated calls).</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_4_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_4_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_4_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 6 of 35: SRP</h3>
+  <div class="case-meta">
+    <strong>ComboStringEditor</strong> &middot;
+    project <code>jmeter</code> &middot;
+    LOC <code>36</code><br>
+    <code>systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/testbeans/gui/ComboStringEditor.java:110-145</code>
+  </div>
+  <pre class="code">ComboStringEditor (String [] pTags, boolean noEdit, boolean noUndefined, ResourceBundle rb) {
+    tags = pTags == null ? ArrayUtils.EMPTY_STRING_ARRAY : pTags.clone ();
+    model = new DefaultComboBoxModel &lt; &gt; ();
+    if (rb != null &amp;&amp; tags.length &gt; 0) {
+        validTranslations = new HashMap &lt; &gt; ();
+        for (String tag : this.tags) {
+            validTranslations.put (tag, rb.getString (tag));
+        }
+    }
+    else {
+        validTranslations = null;
+    }
+    if (! noUndefined) {
+        model.addElement (UNDEFINED);
+    }
+    if (tags.length == 0) {
+        this.minTagIndex = Integer.MAX_VALUE;
+        this.maxTagIndex = Integer.MIN_VALUE;
+    }
+    else {
+        this.minTagIndex = model.getSize ();
+        for (String tag : this.tags) {
+            model.addElement (translate (tag));
+        }
+        this.maxTagIndex = model.getSize ();
+    }
+    if (! noEdit) {
+        model.addElement (EDIT);
+    }
+    combo = new JComboBox &lt; &gt; (model);
+    combo.addItemListener (this);
+    combo.setEditable (false);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for SRP (Single Responsibility — method cohesion):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Multiple distinct responsibilities OR unrelated side effects mixed.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Cannot tell from method alone (depends on class-level role).</li>
+      <li><strong>2 (Compliant):</strong> One focused responsibility OR thin orchestrator (≤3 delegated calls).</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_5_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_5_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_5_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 7 of 35: SRP</h3>
+  <div class="case-meta">
+    <strong>threadFinished</strong> &middot;
+    project <code>jmeter</code> &middot;
+    LOC <code>13</code><br>
+    <code>systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/threads/JMeterThread.java:773-785</code>
+  </div>
+  <pre class="code">private void threadFinished (LoopIterationListener iterationListener) {
+    ThreadListenerTraverser shut = new ThreadListenerTraverser (false);
+    testTree.traverse (shut);
+    JMeterContextService.decrNumberOfThreads ();
+    threadGroup.decrNumberOfThreads ();
+    GuiPackage gp = GuiPackage.getInstance ();
+    if (gp != null) {
+        gp.getMainFrame ().updateCounts ();
+    }
+    if (iterationListener != null) {
+        threadGroupLoopController.removeIterationListener (iterationListener);
+    }
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for SRP (Single Responsibility — method cohesion):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Multiple distinct responsibilities OR unrelated side effects mixed.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Cannot tell from method alone (depends on class-level role).</li>
+      <li><strong>2 (Compliant):</strong> One focused responsibility OR thin orchestrator (≤3 delegated calls).</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_6_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_6_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_6_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 8 of 35: SRP</h3>
+  <div class="case-meta">
+    <strong>testDnsServer</strong> &middot;
+    project <code>jmeter</code> &middot;
+    LOC <code>10</code><br>
+    <code>systems/Projects/jmeter-master/src/protocol/http/src/test/java/org/apache/jmeter/gui/action/ParseCurlCommandActionTest.java:459-468</code>
+  </div>
+  <pre class="code">public void testDnsServer () throws Exception {
+    ParseCurlCommandAction p = new ParseCurlCommandAction ();
+    DNSCacheManager dnsCacheManager = new DNSCacheManager ();
+    BasicCurlParser basicCurlParser = new BasicCurlParser ();
+    Request request = basicCurlParser.parse (&quot;curl &#x27;http://jmeter.apache.org/&#x27; --dns-servers &#x27;0.0.0.0&#x27;&quot;);
+    Method method = getMethodFor (&quot;createDnsServer&quot;, Request.class, DNSCacheManager.class);
+    method.invoke (p, request, dnsCacheManager);
+    assertEquals (&quot;0.0.0.0&quot;, dnsCacheManager.getServers ().get (0).getStringValue (), &quot;the dns server should be set in DNSCacheManager&quot;);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for SRP (Single Responsibility — method cohesion):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Multiple distinct responsibilities OR unrelated side effects mixed.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Cannot tell from method alone (depends on class-level role).</li>
+      <li><strong>2 (Compliant):</strong> One focused responsibility OR thin orchestrator (≤3 delegated calls).</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_7_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_7_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_7_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 9 of 35: SRP</h3>
+  <div class="case-meta">
+    <strong>execute</strong> &middot;
+    project <code>jmeter</code> &middot;
+    LOC <code>77</code><br>
+    <code>systems/Projects/jmeter-master/src/protocol/jdbc/src/main/java/org/apache/jmeter/protocol/jdbc/AbstractJDBCTestElement.java:163-239</code>
+  </div>
+  <pre class="code">protected byte [] execute (Connection conn, SampleResult sample) throws SQLException, IOException, UnsupportedOperationException {
+    log.debug (&quot;executing jdbc:{}&quot;, getQuery ());
+    String currentQueryType = getQueryType ();
+    if (SELECT.equals (currentQueryType)) {
+        try (Statement stmt = conn.createStatement ()) {
+            setQueryTimeout (stmt, getIntegerQueryTimeout ());
+            configureMaxRows (stmt);
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery (getQuery ());
+                sample.latencyEnd ();
+                return getStringFromResultSet (rs).getBytes (ENCODING);
+            } finally {
+                close (rs);
+            }
+        }
+    }
+    else if (CALLABLE.equals (currentQueryType)) {
+        try (CallableStatement cstmt = getCallableStatement (conn)) {
+            int [] out = setArguments (cstmt);
+            boolean hasResultSet = cstmt.execute ();
+            sample.latencyEnd ();
+            String sb = resultSetsToString (cstmt, hasResultSet, out);
+            return sb.getBytes (ENCODING);
+        }
+    }
+    else if (UPDATE.equals (currentQueryType)) {
+        try (Statement stmt = conn.createStatement ()) {
+            setQueryTimeout (stmt, getIntegerQueryTimeout ());
+            stmt.executeUpdate (getQuery ());
+            sample.latencyEnd ();
+            int updateCount = stmt.getUpdateCount ();
+            String results = updateCount + &quot; updates&quot;;
+            return results.getBytes (ENCODING);
+        }
+    }
+    else if (PREPARED_SELECT.equals (currentQueryType)) {
+        try (PreparedStatement pstmt = getPreparedStatement (conn)) {
+            setArguments (pstmt);
+            configureMaxRows (pstmt);
+            ResultSet rs = null;
+            try {
+                rs = pstmt.executeQuery ();
+                sample.latencyEnd ();
+                return getStringFromResultSet (rs).getBytes (ENCODING);
+            } finally {
+                close (rs);
+            }
+        }
+    }
+    else if (PREPARED_UPDATE.equals (currentQueryType)) {
+        try (PreparedStatement pstmt = getPreparedStatement (conn)) {
+            setArguments (pstmt);
+            pstmt.executeUpdate ();
+            sample.latencyEnd ();
+            String sb = resultSetsToString (pstmt, false, null);
+            return sb.getBytes (ENCODING);
+        }
+    }
+    else if (ROLLBACK.equals (currentQueryType)) {
+        conn.rollback ();
+        sample.latencyEnd ();
+        return ROLLBACK.getBytes (ENCODING);
+    }
+    else if (COMMIT.equals (currentQueryType)) {
+        conn.commit ();
+        sample.latencyEnd ();
+        return COMMIT.getBytes (ENCODING);
+    }
+    else if (AUTOCOMMIT_FALSE.equals (currentQueryType)) {
+        conn.setAutoCommit (false);
+        sample.latencyEnd ();
+        return AUTOCOMMIT_FALSE.getBytes (ENCODING);
+    }
+    else if (AUTOCOMMIT_TRUE.equals (currentQueryType)) {
+        conn.setAutoCommit (true);
+        sample.latencyEnd ();
+        return AUTOCOMMIT_TRUE.getBytes (ENCODING);
+    }
+    else {
+        throw new UnsupportedOperationException (&quot;Unexpected query type: &quot; + currentQueryType);
+    }
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for SRP (Single Responsibility — method cohesion):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Multiple distinct responsibilities OR unrelated side effects mixed.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Cannot tell from method alone (depends on class-level role).</li>
+      <li><strong>2 (Compliant):</strong> One focused responsibility OR thin orchestrator (≤3 delegated calls).</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_8_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_8_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_8_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 10 of 35: SRP</h3>
+  <div class="case-meta">
+    <strong>findDefaultText</strong> &middot;
+    project <code>struts</code> &middot;
+    LOC <code>23</code><br>
+    <code>systems/Projects/struts-main/core/src/main/java/org/apache/struts2/text/AbstractLocalizedTextProvider.java:111-133</code>
+  </div>
+  <pre class="code">public String findDefaultText (String textKey, Locale locale) {
+    List &lt; String &gt; localList = getCurrentBundleNames ();
+    for (String bundleName : localList) {
+        ResourceBundle bundle = findResourceBundle (bundleName, locale);
+        if (bundle != null) {
+            reloadBundles ();
+            try {
+                return bundle.getString (textKey);
+            } catch (MissingResourceException e) {
+            }
+        }
+    }
+    if (devMode) {
+        LOG.warn (&quot;Missing key [{}] in bundles [{}]!&quot;, textKey, localList);
+    }
+    else {
+        LOG.debug (&quot;Missing key [{}] in bundles [{}]!&quot;, textKey, localList);
+    }
+    return null;
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for SRP (Single Responsibility — method cohesion):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Multiple distinct responsibilities OR unrelated side effects mixed.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Cannot tell from method alone (depends on class-level role).</li>
+      <li><strong>2 (Compliant):</strong> One focused responsibility OR thin orchestrator (≤3 delegated calls).</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_9_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_9_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_9_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 11 of 35: SRP</h3>
+  <div class="case-meta">
+    <strong>testWithoutParamsWithoutFieldErrors_clearTagStateSet</strong> &middot;
+    project <code>struts</code> &middot;
+    LOC <code>19</code><br>
+    <code>systems/Projects/struts-main/core/src/test/java/org/apache/struts2/views/jsp/ui/FieldErrorTagTest.java:96-114</code>
+  </div>
+  <pre class="code">public void testWithoutParamsWithoutFieldErrors_clearTagStateSet () throws Exception {
+    FieldErrorTag tag = new FieldErrorTag ();
+    ((InternalAction) action).setHaveFieldErrors (false);
+    tag.setPerformClearTagStateForTagPoolingServers (true);
+    tag.setPageContext (pageContext);
+    tag.doStartTag ();
+    setComponentTagClearTagState (tag, true);
+    tag.doEndTag ();
+    verify (FieldErrorTagTest.class.getResource (&quot;fielderror-2.txt&quot;));
+    FieldErrorTag freshTag = new FieldErrorTag ();
+    freshTag.setPerformClearTagStateForTagPoolingServers (true);
+    freshTag.setPageContext (pageContext);
+    assertTrue (&quot;Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  &quot; + &quot;May indicate that clearTagStateForTagPoolingServers() calls are not working properly.&quot;, strutsBodyTagsAreReflectionEqual (tag, freshTag));
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for SRP (Single Responsibility — method cohesion):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Multiple distinct responsibilities OR unrelated side effects mixed.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Cannot tell from method alone (depends on class-level role).</li>
+      <li><strong>2 (Compliant):</strong> One focused responsibility OR thin orchestrator (≤3 delegated calls).</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_10_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_10_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_10_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 12 of 35: SRP</h3>
+  <div class="case-meta">
+    <strong>read</strong> &middot;
+    project <code>struts</code> &middot;
+    LOC <code>49</code><br>
+    <code>systems/Projects/struts-main/plugins/json/src/main/java/org/apache/struts2/json/JSONReader.java:75-123</code>
+  </div>
+  <pre class="code">protected Object read () throws JSONException {
+    Object ret;
+    this.skipWhiteSpace ();
+    if (this.c == &#x27;&quot;&#x27;) {
+        this.next ();
+        ret = this.string (&#x27;&quot;&#x27;);
+    }
+    else if (this.c == &#x27;\&#x27;&#x27;) {
+        this.next ();
+        ret = this.string (&#x27;\&#x27;&#x27;);
+    }
+    else if (this.c == &#x27;[&#x27;) {
+        this.next ();
+        ret = this.array ();
+    }
+    else if (this.c == &#x27;]&#x27;) {
+        ret = ARRAY_END;
+        this.next ();
+    }
+    else if (this.c == &#x27;,&#x27;) {
+        ret = COMMA;
+        this.next ();
+    }
+    else if (this.c == &#x27;{&#x27;) {
+        this.next ();
+        ret = this.object ();
+    }
+    else if (this.c == &#x27;}&#x27;) {
+        ret = OBJECT_END;
+        this.next ();
+    }
+    else if (this.c == &#x27;:&#x27;) {
+        ret = COLON;
+        this.next ();
+    }
+    else if ((this.c == &#x27;t&#x27;) &amp;&amp; (this.next () == &#x27;r&#x27;) &amp;&amp; (this.next () == &#x27;u&#x27;) &amp;&amp; (this.next () == &#x27;e&#x27;)) {
+        ret = Boolean.TRUE;
+        this.next ();
+    }
+    else if ((this.c == &#x27;f&#x27;) &amp;&amp; (this.next () == &#x27;a&#x27;) &amp;&amp; (this.next () == &#x27;l&#x27;) &amp;&amp; (this.next () == &#x27;s&#x27;) &amp;&amp; (this.next () == &#x27;e&#x27;)) {
+        ret = Boolean.FALSE;
+        this.next ();
+    }
+    else if ((this.c == &#x27;n&#x27;) &amp;&amp; (this.next () == &#x27;u&#x27;) &amp;&amp; (this.next () == &#x27;l&#x27;) &amp;&amp; (this.next () == &#x27;l&#x27;)) {
+        ret = null;
+        this.next ();
+    }
+    else if (Character.isDigit (this.c) || (this.c == &#x27;-&#x27;)) {
+        ret = this.number ();
+    }
+    else {
+        throw buildInvalidInputException ();
+    }
+    this.token = ret;
+    return ret;
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for SRP (Single Responsibility — method cohesion):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Multiple distinct responsibilities OR unrelated side effects mixed.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Cannot tell from method alone (depends on class-level role).</li>
+      <li><strong>2 (Compliant):</strong> One focused responsibility OR thin orchestrator (≤3 delegated calls).</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_11_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_11_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_11_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 13 of 35: OCP</h3>
+  <div class="case-meta">
+    <strong>serializeFields</strong> &middot;
+    project <code>jackson-databind</code> &middot;
+    LOC <code>33</code><br>
+    <code>systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java:746-778</code>
+  </div>
+  <pre class="code">protected void serializeFields (Object bean, JsonGenerator gen, SerializerProvider provider) throws IOException {
+    final BeanPropertyWriter [] props;
+    if (_filteredProps != null &amp;&amp; provider.getActiveView () != null) {
+        props = _filteredProps;
+    }
+    else {
+        props = _props;
+    }
+    int i = 0;
+    try {
+        for (final int len = props.length; i &lt; len; ++ i) {
+            BeanPropertyWriter prop = props [i];
+            if (prop != null) {
+                prop.serializeAsField (bean, gen, provider);
+            }
+        }
+    } catch (Exception e) {
+        String name = (i == props.length) ? &quot;[anySetter]&quot; : props [i].getName ();
+        wrapAndThrow (provider, e, bean, name);
+    } catch (StackOverflowError e) {
+        DatabindException mapE = new JsonMappingException (gen, &quot;Infinite recursion (StackOverflowError)&quot;, e);
+        String name = (i == props.length) ? &quot;[anySetter]&quot; : props [i].getName ();
+        mapE.prependPath (bean, name);
+        throw mapE;
+    }
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for OCP (Open/Closed — modification-risk signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> if/else or switch chain with 3+ branches encoding variants, OR hard-coded policy thresholds, OR copy-modify branches.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Branching exists but unclear if it represents an extensibility point.</li>
+      <li><strong>2 (Compliant):</strong> Behavior delegated to collaborators; branching minimal (0–2) and not encoding variants.</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_12_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_12_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_12_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 14 of 35: OCP</h3>
+  <div class="case-meta">
+    <strong>forTypeFactory</strong> &middot;
+    project <code>jackson-databind</code> &middot;
+    LOC <code>3</code><br>
+    <code>systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/cfg/CacheProviderTest.java:120-122</code>
+  </div>
+  <pre class="code">public LookupCache &lt; Object, JavaType &gt; forTypeFactory () {
+    return new LRUMap &lt; &gt; (16, 64);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for OCP (Open/Closed — modification-risk signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> if/else or switch chain with 3+ branches encoding variants, OR hard-coded policy thresholds, OR copy-modify branches.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Branching exists but unclear if it represents an extensibility point.</li>
+      <li><strong>2 (Compliant):</strong> Behavior delegated to collaborators; branching minimal (0–2) and not encoding variants.</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_13_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_13_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_13_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 15 of 35: OCP</h3>
+  <div class="case-meta">
+    <strong>JsseSSLManager</strong> &middot;
+    project <code>jmeter</code> &middot;
+    LOC <code>23</code><br>
+    <code>systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/util/JsseSSLManager.java:98-120</code>
+  </div>
+  <pre class="code">public JsseSSLManager (Provider provider) {
+    log.debug (&quot;ssl Provider = {}&quot;, provider);
+    setProvider (provider);
+    if (null == this.rand) {
+        this.rand = new SecureRandom ();
+    }
+    try {
+        if (SHARED_SESSION_CONTEXT) {
+            log.debug (&quot;Creating shared context&quot;);
+            this.defaultContext = createContext ();
+        }
+        else {
+            this.threadlocal = new ThreadLocal &lt; &gt; ();
+        }
+        HttpsURLConnection.setDefaultSSLSocketFactory (new HttpSSLProtocolSocketFactory (CPS));
+        HttpsURLConnection.setDefaultHostnameVerifier ((hostname, session) -&gt; true);
+        log.debug (&quot;SSL stuff all set&quot;);
+    } catch (GeneralSecurityException ex) {
+        log.error (&quot;Could not set up SSLContext&quot;, ex);
+    }
+    log.debug (&quot;JsseSSLManager installed&quot;);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for OCP (Open/Closed — modification-risk signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> if/else or switch chain with 3+ branches encoding variants, OR hard-coded policy thresholds, OR copy-modify branches.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Branching exists but unclear if it represents an extensibility point.</li>
+      <li><strong>2 (Compliant):</strong> Behavior delegated to collaborators; branching minimal (0–2) and not encoding variants.</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_14_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_14_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_14_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 16 of 35: OCP</h3>
+  <div class="case-meta">
+    <strong>testGetRequest</strong> &middot;
+    project <code>jmeter</code> &middot;
+    LOC <code>26</code><br>
+    <code>systems/Projects/jmeter-master/src/protocol/http/src/test/java/org/apache/jmeter/protocol/http/sampler/TestHTTPSamplersAgainstHttpMirrorServer.java:647-672</code>
+  </div>
+  <pre class="code">private void testGetRequest (int samplerType) throws Exception {
+    HTTPSamplerBase sampler = createHttpSampler (samplerType);
+    String contentEncoding = &quot;&quot;;
+    setupUrl (sampler, contentEncoding);
+    sampler.setMethod (HTTPConstants.GET);
+    HTTPSampleResult res = executeSampler (sampler);
+    checkGetRequest (sampler, res);
+    sampler = createHttpSampler (samplerType);
+    contentEncoding = ISO_8859_1;
+    setupUrl (sampler, contentEncoding);
+    sampler.setMethod (HTTPConstants.GET);
+    res = executeSampler (sampler);
+    checkGetRequest (sampler, res);
+    sampler = createHttpSampler (samplerType);
+    contentEncoding = &quot;UTF-8&quot;;
+    setupUrl (sampler, contentEncoding);
+    sampler.setMethod (HTTPConstants.GET);
+    res = executeSampler (sampler);
+    checkGetRequest (sampler, res);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for OCP (Open/Closed — modification-risk signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> if/else or switch chain with 3+ branches encoding variants, OR hard-coded policy thresholds, OR copy-modify branches.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Branching exists but unclear if it represents an extensibility point.</li>
+      <li><strong>2 (Compliant):</strong> Behavior delegated to collaborators; branching minimal (0–2) and not encoding variants.</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_15_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_15_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_15_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 17 of 35: OCP</h3>
+  <div class="case-meta">
+    <strong>apply</strong> &middot;
+    project <code>selenium</code> &middot;
+    LOC <code>35</code><br>
+    <code>systems/Projects/selenium-trunk/java/src/org/openqa/selenium/docker/v1_41/PullImage.java:45-79</code>
+  </div>
+  <pre class="code">public void apply (Reference ref) {
+    Require.nonNull (&quot;Reference to pull&quot;, ref);
+    LOG.info (&quot;Pulling &quot; + ref);
+    String image = String.format (&quot;%s/%s&quot;, ref.getDomain (), ref.getName ());
+    HttpRequest req = new HttpRequest (POST, String.format (&quot;/v%s/images/create&quot;, DOCKER_API_VERSION)).addHeader (&quot;Content-Type&quot;, JSON_UTF_8).addQueryParameter (&quot;fromImage&quot;, image).addQueryParameter (&quot;platform&quot;, ref.getPlatform ());
+    if (ref.getDigest () != null) {
+        req.addQueryParameter (&quot;tag&quot;, ref.getDigest ());
+    }
+    else if (ref.getTag () != null) {
+        req.addQueryParameter (&quot;tag&quot;, ref.getTag ());
+    }
+    HttpResponse res = client.execute (req);
+    LOG.info (&quot;Have response from server&quot;);
+    if (! res.isSuccessful ()) {
+        String message = &quot;Unable to pull image: &quot; + ref.getFamiliarName ();
+        try {
+            Map &lt; String, Object &gt; value = JSON.toType (Contents.string (res), MAP_TYPE);
+            message = (String) value.get (&quot;message&quot;);
+        } catch (Exception e) {
+        }
+        throw new DockerException (message);
+    }
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for OCP (Open/Closed — modification-risk signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> if/else or switch chain with 3+ branches encoding variants, OR hard-coded policy thresholds, OR copy-modify branches.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Branching exists but unclear if it represents an extensibility point.</li>
+      <li><strong>2 (Compliant):</strong> Behavior delegated to collaborators; branching minimal (0–2) and not encoding variants.</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_16_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_16_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_16_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 18 of 35: OCP</h3>
+  <div class="case-meta">
+    <strong>apply</strong> &middot;
+    project <code>selenium</code> &middot;
+    LOC <code>42</code><br>
+    <code>systems/Projects/selenium-trunk/java/src/org/openqa/selenium/remote/http/RetryRequest.java:39-80</code>
+  </div>
+  <pre class="code">public HttpHandler apply (HttpHandler next) {
+    return req -&gt; {
+        for (int i = 0; i &lt; NEEDED_ATTEMPTS; i ++) {
+            HttpResponse response;
+            try {
+                response = next.execute (req);
+            } catch (RuntimeException ex) {
+                boolean isConnectionFailure = ex.getCause () instanceof ConnectException;
+                if (isConnectionFailure &amp;&amp; i &lt; RETRIES_ON_CONNECTION_FAILURE) {
+                    LOG.log (LOG_LEVEL, &quot;Retry #&quot; + (i + 1) + &quot; on ConnectException&quot;, ex);
+                    continue;
+                }
+                throw ex;
+            }
+            boolean isServerError = (response.getStatus () == HTTP_INTERNAL_ERROR &amp;&amp; response.getContent ().length () == 0) || response.getStatus () == HTTP_UNAVAILABLE;
+            if (isServerError &amp;&amp; i &lt; RETRIES_ON_SERVER_ERROR) {
+                LOG.log (LOG_LEVEL, &quot;Retry #&quot; + (i + 1) + &quot; on ServerError: &quot; + response.getStatus ());
+                continue;
+            }
+            return response;
+        }
+        throw new IllegalStateException (&quot;Effective unreachable code reached, check constants.&quot;);
+    };
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for OCP (Open/Closed — modification-risk signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> if/else or switch chain with 3+ branches encoding variants, OR hard-coded policy thresholds, OR copy-modify branches.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Branching exists but unclear if it represents an extensibility point.</li>
+      <li><strong>2 (Compliant):</strong> Behavior delegated to collaborators; branching minimal (0–2) and not encoding variants.</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_17_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_17_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_17_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 19 of 35: OCP</h3>
+  <div class="case-meta">
+    <strong>getContainer</strong> &middot;
+    project <code>struts</code> &middot;
+    LOC <code>16</code><br>
+    <code>systems/Projects/struts-main/core/src/main/java/org/apache/struts2/ActionSupport.java:345-360</code>
+  </div>
+  <pre class="code">protected Container getContainer () {
+    if (container == null) {
+        container = ActionContext.getContext ().getContainer ();
+        if (container != null) {
+            boolean devMode = Boolean.parseBoolean (container.getInstance (String.class, StrutsConstants.STRUTS_DEVMODE));
+            if (devMode) {
+                LOG.warn (&quot;Container is null, action was created manually? Fallback to ActionContext&quot;);
+            }
+            else {
+                LOG.debug (&quot;Container is null, action was created manually? Fallback to ActionContext&quot;);
+            }
+        }
+        else {
+            LOG.warn (&quot;Container is null, action was created out of ActionContext scope?!?&quot;);
+        }
+    }
+    return container;
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 2 &mdash; Compliant</div>
+    <div><strong>Annotator B (Caleb):</strong> 0 &mdash; Violated</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for OCP (Open/Closed — modification-risk signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> if/else or switch chain with 3+ branches encoding variants, OR hard-coded policy thresholds, OR copy-modify branches.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Branching exists but unclear if it represents an extensibility point.</li>
+      <li><strong>2 (Compliant):</strong> Behavior delegated to collaborators; branching minimal (0–2) and not encoding variants.</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_18_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_18_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_18_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 20 of 35: OCP</h3>
+  <div class="case-meta">
+    <strong>findDefaultText</strong> &middot;
+    project <code>struts</code> &middot;
+    LOC <code>23</code><br>
+    <code>systems/Projects/struts-main/core/src/main/java/org/apache/struts2/text/AbstractLocalizedTextProvider.java:111-133</code>
+  </div>
+  <pre class="code">public String findDefaultText (String textKey, Locale locale) {
+    List &lt; String &gt; localList = getCurrentBundleNames ();
+    for (String bundleName : localList) {
+        ResourceBundle bundle = findResourceBundle (bundleName, locale);
+        if (bundle != null) {
+            reloadBundles ();
+            try {
+                return bundle.getString (textKey);
+            } catch (MissingResourceException e) {
+            }
+        }
+    }
+    if (devMode) {
+        LOG.warn (&quot;Missing key [{}] in bundles [{}]!&quot;, textKey, localList);
+    }
+    else {
+        LOG.debug (&quot;Missing key [{}] in bundles [{}]!&quot;, textKey, localList);
+    }
+    return null;
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for OCP (Open/Closed — modification-risk signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> if/else or switch chain with 3+ branches encoding variants, OR hard-coded policy thresholds, OR copy-modify branches.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Branching exists but unclear if it represents an extensibility point.</li>
+      <li><strong>2 (Compliant):</strong> Behavior delegated to collaborators; branching minimal (0–2) and not encoding variants.</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_19_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_19_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_19_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 21 of 35: OCP</h3>
+  <div class="case-meta">
+    <strong>testFieldErrorsEscape</strong> &middot;
+    project <code>struts</code> &middot;
+    LOC <code>23</code><br>
+    <code>systems/Projects/struts-main/core/src/test/java/org/apache/struts2/views/jsp/ui/FieldErrorTagTest.java:116-138</code>
+  </div>
+  <pre class="code">public void testFieldErrorsEscape () throws Exception {
+    FieldErrorTag tag = new FieldErrorTag ();
+    TestAction testAction = new TestAction ();
+    testAction.addFieldError (&quot;f&quot;, &quot;&lt;p&gt;hey&lt;/p&gt;&quot;);
+    stack.pop ();
+    stack.push (testAction);
+    tag.setEscape (true);
+    tag.setPageContext (pageContext);
+    tag.doStartTag ();
+    tag.doEndTag ();
+    assertEquals (normalize (&quot;&lt;ul class=\&quot;errorMessage\&quot;&gt;&lt;li&gt;&lt;span&gt;&amp;lt;p&amp;gt;hey&amp;lt;/p&amp;gt;&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&quot;, true), normalize (writer.toString (), true));
+    FieldErrorTag freshTag = new FieldErrorTag ();
+    freshTag.setPageContext (pageContext);
+    assertTrue (&quot;Tag state after doEndTag() under default tag clear state is inequal to new Tag with pageContext/parent set.  &quot; + &quot;May indicate that clearTagStateForTagPoolingServers() calls are not working properly.&quot;, strutsBodyTagsAreReflectionEqual (tag, freshTag));
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for OCP (Open/Closed — modification-risk signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> if/else or switch chain with 3+ branches encoding variants, OR hard-coded policy thresholds, OR copy-modify branches.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> Branching exists but unclear if it represents an extensibility point.</li>
+      <li><strong>2 (Compliant):</strong> Behavior delegated to collaborators; branching minimal (0–2) and not encoding variants.</li>
+    </ul>
+    
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_20_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_20_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_20_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 22 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>makeDateFormat</strong> &middot;
+    project <code>fitnesse</code> &middot;
+    LOC <code>4</code><br>
+    <code>systems/Projects/SolidLeaning/fitnesse/src/fitnesse/wiki/RecentChangesWikiPage.java:21-24</code>
+  </div>
+  <pre class="code">private static SimpleDateFormat makeDateFormat () {
+    return new SimpleDateFormat (FitNesseContext.recentChangesDateFormat);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_21_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_21_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_21_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 23 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>integerMethodIsNull</strong> &middot;
+    project <code>fitnesse</code> &middot;
+    LOC <code>3</code><br>
+    <code>systems/Projects/SolidLeaning/fitnesse/test/fit/BindingTest.java:70-72</code>
+  </div>
+  <pre class="code">public Integer integerMethodIsNull () {
+    return integerField;
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_22_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_22_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_22_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 24 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>responderInstance</strong> &middot;
+    project <code>fitnesse</code> &middot;
+    LOC <code>3</code><br>
+    <code>systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/refactoring/RenamePageResponderTest.java:27-29</code>
+  </div>
+  <pre class="code">protected Responder responderInstance () {
+    return new RenamePageResponder ();
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_23_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_23_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_23_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 25 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>nextFloat</strong> &middot;
+    project <code>commons-lang</code> &middot;
+    LOC <code>3</code><br>
+    <code>systems/Projects/commons-lang-master/src/main/java/org/apache/commons/lang3/RandomUtils.java:168-170</code>
+  </div>
+  <pre class="code">public static float nextFloat () {
+    return secure ().randomFloat ();
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_24_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_24_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_24_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 26 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>stream</strong> &middot;
+    project <code>commons-lang</code> &middot;
+    LOC <code>3</code><br>
+    <code>systems/Projects/commons-lang-master/src/main/java/org/apache/commons/lang3/function/Failable.java:471-473</code>
+  </div>
+  <pre class="code">public static &lt; T &gt; FailableStream &lt; T &gt; stream (final Stream &lt; T &gt; stream) {
+    return new FailableStream &lt; &gt; (stream);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_25_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_25_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_25_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 27 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>testRemoveAllDoubleArrayOutOfBoundsIndex</strong> &middot;
+    project <code>commons-lang</code> &middot;
+    LOC <code>3</code><br>
+    <code>systems/Projects/commons-lang-master/src/test/java/org/apache/commons/lang3/ArrayUtilsRemoveMultipleTest.java:318-320</code>
+  </div>
+  <pre class="code">public void testRemoveAllDoubleArrayOutOfBoundsIndex () {
+    assertThrows (IndexOutOfBoundsException.class, () -&gt; ArrayUtils.removeAll (new double [] {1, 2}, 2));
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_26_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_26_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_26_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 28 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>locateTransactionManager</strong> &middot;
+    project <code>hibernate-orm</code> &middot;
+    LOC <code>11</code><br>
+    <code>systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/engine/transaction/jta/platform/internal/AtomikosJtaPlatform.java:20-30</code>
+  </div>
+  <pre class="code">protected TransactionManager locateTransactionManager () {
+    try {
+        return (TransactionManager) serviceRegistry ().requireService (ClassLoaderService.class).classForName (TM_CLASS_NAME).newInstance ();
+    } catch (Exception e) {
+        throw new JtaPlatformException (&quot;Could not instantiate Atomikos TransactionManager&quot;, e);
+    }
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_27_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_27_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_27_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 29 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>afterStatement</strong> &middot;
+    project <code>hibernate-orm</code> &middot;
+    LOC <code>3</code><br>
+    <code>systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/sql/exec/spi/ExecutionContext.java:85-87</code>
+  </div>
+  <pre class="code">default void afterStatement (LogicalConnectionImplementor logicalConnection) {
+    logicalConnection.afterStatement ();
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_28_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_28_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_28_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 30 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>_explode</strong> &middot;
+    project <code>jackson-databind</code> &middot;
+    LOC <code>41</code><br>
+    <code>systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertyBuilder.java:1280-1320</code>
+  </div>
+  <pre class="code">private void _explode (Collection &lt; PropertyName &gt; newNames, Map &lt; PropertyName, POJOPropertyBuilder &gt; props, Linked &lt; ? &gt; accessors) {
+    final Linked &lt; ? &gt; firstAcc = accessors;
+    for (Linked &lt; ? &gt; node = accessors; node != null; node = node.next) {
+        PropertyName name = node.name;
+        if (! node.isNameExplicit || name == null) {
+            if (! node.isVisible) {
+                continue;
+            }
+            throw new IllegalStateException (&quot;Conflicting/ambiguous property name definitions (implicit name &quot; + ClassUtil.name (_name) + &quot;): found multiple explicit names: &quot; + newNames + &quot;, but also implicit accessor: &quot; + node);
+        }
+        POJOPropertyBuilder prop = props.get (name);
+        if (prop == null) {
+            prop = new POJOPropertyBuilder (_config, _annotationIntrospector, _forSerialization, _internalName, name);
+            props.put (name, prop);
+        }
+        if (firstAcc == _fields) {
+            Linked &lt; AnnotatedField &gt; n2 = (Linked &lt; AnnotatedField &gt;) node;
+            prop._fields = n2.withNext (prop._fields);
+        }
+        else if (firstAcc == _getters) {
+            Linked &lt; AnnotatedMethod &gt; n2 = (Linked &lt; AnnotatedMethod &gt;) node;
+            prop._getters = n2.withNext (prop._getters);
+        }
+        else if (firstAcc == _setters) {
+            Linked &lt; AnnotatedMethod &gt; n2 = (Linked &lt; AnnotatedMethod &gt;) node;
+            prop._setters = n2.withNext (prop._setters);
+        }
+        else if (firstAcc == _ctorParameters) {
+            Linked &lt; AnnotatedParameter &gt; n2 = (Linked &lt; AnnotatedParameter &gt;) node;
+            prop._ctorParameters = n2.withNext (prop._ctorParameters);
+        }
+        else {
+            throw new IllegalStateException (&quot;Internal error: mismatched accessors, property: &quot; + this);
+        }
+    }
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_29_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_29_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_29_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 31 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>build</strong> &middot;
+    project <code>jackson-databind</code> &middot;
+    LOC <code>3</code><br>
+    <code>systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/deser/builder/BuilderErrorHandlingTest.java:43-45</code>
+  </div>
+  <pre class="code">public ValueClassXY build () {
+    return new ValueClassXY (x, y);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_30_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_30_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_30_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 32 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>hashCode</strong> &middot;
+    project <code>jackson-databind</code> &middot;
+    LOC <code>3</code><br>
+    <code>systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/jsontype/TestDoubleJsonCreator.java:167-169</code>
+  </div>
+  <pre class="code">public int hashCode () {
+    return Objects.hash (this.type, this.value);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_31_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_31_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_31_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 33 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>getResult</strong> &middot;
+    project <code>jmeter</code> &middot;
+    LOC <code>3</code><br>
+    <code>systems/Projects/jmeter-master/src/components/src/main/java/org/apache/jmeter/assertions/ResponseAssertion.java:205-207</code>
+  </div>
+  <pre class="code">public AssertionResult getResult (SampleResult response) {
+    return evaluateResponse (response);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_32_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_32_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_32_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 34 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>useExcludedPackageNamePatterns</strong> &middot;
+    project <code>struts</code> &middot;
+    LOC <code>3</code><br>
+    <code>systems/Projects/struts-main/core/src/main/java/org/apache/struts2/ognl/SecurityMemberAccess.java:433-435</code>
+  </div>
+  <pre class="code">public void useExcludedPackageNamePatterns (String commaDelimitedPackagePatterns) {
+    this.excludedPackageNamePatterns = toNewPatternsSet (excludedPackageNamePatterns, commaDelimitedPackagePatterns);
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_33_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_33_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_33_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+
+<div class="case">
+  <h3>Case 35 of 35: DIP</h3>
+  <div class="case-meta">
+    <strong>commaDelimitedStringToSet</strong> &middot;
+    project <code>struts</code> &middot;
+    LOC <code>3</code><br>
+    <code>systems/Projects/struts-main/core/src/main/java/org/apache/struts2/util/TextParseUtil.java:256-258</code>
+  </div>
+  <pre class="code">public static Set &lt; String &gt; commaDelimitedStringToSet (String s) {
+    return Arrays.stream (s.split (&quot;,&quot;)).map (String :: trim).filter (s1 -&gt; ! s1.isEmpty ()).collect (Collectors.toSet ());
+}</pre>
+
+  <div class="scores">
+    <div><strong>Annotator A (Shams):</strong> 0 &mdash; Violated</div>
+    <div><strong>Annotator B (Caleb):</strong> 2 &mdash; Compliant</div>
+  </div>
+
+  <div class="rubric-box">
+    <strong>Rubric for DIP (Dependency Inversion — replaceable-dependency signals):</strong>
+    <ul>
+      <li><strong>0 (Violated):</strong> Instantiates replaceable collaborator/service directly, OR uses static singletons for replaceable collaborators, OR strong framework coupling.</li>
+      <li><strong>1 (Partial / Uncertain):</strong> new X(...) appears but unclear if X is replaceable collaborator vs value/helper.</li>
+      <li><strong>2 (Compliant):</strong> Dependencies injected via parameters/fields, OR no replaceable dependencies appear.</li>
+    </ul>
+    <p style="font-size:12px; margin-top:6px;"><strong>NOT DIP violations:</strong> instantiating collections (ArrayList, HashMap), strings, primitives, value objects, iterators, exceptions, or small local helpers.</p>
+  </div>
+
+  <div class="decision">
+    <strong>Agreed decision:</strong>
+    <div class="checkbox-row">
+      <label><input type="radio" name="case_34_score"> 0 &mdash; Violated</label>
+      <label><input type="radio" name="case_34_score"> 1 &mdash; Partial</label>
+      <label><input type="radio" name="case_34_score"> 2 &mdash; Compliant</label>
+    </div>
+    <label>Rationale (one sentence, will become calibration note):</label>
+    <textarea rows="2" placeholder="e.g., 'static call to Files.copy is JDK utility, not replaceable collaborator → score 2'"></textarea>
+    <label>Pattern flag (check if this case represents a recurring boundary issue):</label>
+    <div class="checkbox-row">
+      <label><input type="checkbox"> Recurring pattern (note in addendum)</label>
+    </div>
+  </div>
+</div>
+
+</body></html>
