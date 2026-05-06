@@ -1,0 +1,1771 @@
+method_id,project,file_path,startline,endline,method_loc,method_name,method_source,srp_score_llm,srp_label_llm,srp_confidence_llm,srp_notes_llm,ocp_score_llm,ocp_label_llm,ocp_confidence_llm,ocp_notes_llm,dip_score_llm,dip_label_llm,dip_confidence_llm,dip_notes_llm,overall_solid_score,overall_flags
+systems/Projects/selenium-trunk/java/src/org/openqa/selenium/grid/Main.java:116-155,selenium,systems/Projects/selenium-trunk/java/src/org/openqa/selenium/grid/Main.java,116,155,40,configure,"public Executable configure (PrintStream out, PrintStream err, String...args) {
+    return () -> {
+        int longest = commands.stream ().filter (CliCommand :: isShown).map (CliCommand :: getName).max (Comparator.comparingInt (String :: length)).map (String :: length).orElse (0) + 2;
+        PrintWriter outWriter = new WrappedPrintWriter (out, 72, 0);
+        outWriter.append (getName ()).append (""\n\n"");
+        outWriter.append (getDescription ()).append (""\n"").append (""\n"");
+        int indent = Math.min (longest + 2, 25);
+        String format = ""  %-"" + longest + ""s"";
+        PrintWriter indented = new WrappedPrintWriter (out, 72, indent);
+        commands.stream ().filter (CliCommand :: isShown).forEach (cmd -> indented.format (format, cmd.getName ()).append (cmd.getDescription ()).append (""\n""));
+        outWriter.write (""\nFor each command, run with `--help` for command-specific help\n"");
+        outWriter.write (""\nUse the `--ext` flag before the command name to specify an additional "" + ""classpath to use with the server (for example, to provide additional "" + ""commands, or to provide additional driver implementations). For example:\n"");
+        outWriter.write (String.format (""%n  java -jar selenium.jar --ext example.jar%sdir standalone --port 1234"", File.pathSeparator));
+        out.println (""\n"");
+    };
+}",2,Compliant,0.78,,2,Compliant,0.74,,1,Partial,0.55,Cannot determine from this method alone whether WrappedPrintWriter is a simple local helper/value type or a replaceable external collaborator.,5,needs_more_context
+systems/Projects/selenium-trunk/java/test/org/openqa/selenium/firefox/FirefoxOptionsTest.java:90-92,selenium,systems/Projects/selenium-trunk/java/test/org/openqa/selenium/firefox/FirefoxOptionsTest.java,90,92,3,binaryPathNeedNotExist,"void binaryPathNeedNotExist () {
+    new FirefoxOptions ().setBinary (""does/not/exist"");
+}",2,Compliant,0.78,,2,Compliant,0.62,,0,Violated,0.7,Method is tightly coupled to the concrete FirefoxOptions type via direct construction.,4,
+systems/Projects/struts-main/core/src/main/java/org/apache/struts2/ActionSupport.java:345-360,struts,systems/Projects/struts-main/core/src/main/java/org/apache/struts2/ActionSupport.java,345,360,16,getContainer,"protected Container getContainer () {
+    if (container == null) {
+        container = ActionContext.getContext ().getContainer ();
+        if (container != null) {
+            boolean devMode = Boolean.parseBoolean (container.getInstance (String.class, StrutsConstants.STRUTS_DEVMODE));
+            if (devMode) {
+                LOG.warn (""Container is null, action was created manually? Fallback to ActionContext"");
+            }
+            else {
+                LOG.debug (""Container is null, action was created manually? Fallback to ActionContext"");
+            }
+        }
+        else {
+            LOG.warn (""Container is null, action was created out of ActionContext scope?!?"");
+        }
+    }
+    return container;
+}",0,Violated,0.75,Method both retrieves/caches a dependency and performs conditional logging based on configuration.,1,Partial,0.55,"Branching is moderate (nested if/else) and may be simple control flow, but changes to logging/handling policy would require modifying this method.",0,Violated,0.8,"Method is tightly coupled to concrete/global access patterns (ActionContext and static logger), reducing replaceability.",1,needs_more_context
+systems/Projects/selenium-trunk/java/test/org/openqa/selenium/support/ui/SlowLoadableComponentTest.java:140-145,selenium,systems/Projects/selenium-trunk/java/test/org/openqa/selenium/support/ui/SlowLoadableComponentTest.java,140,145,6,isLoaded,"protected void isLoaded () throws Error {
+    clock.sleep (Duration.ofSeconds (1));
+    throw new Error ();
+}",2,Compliant,0.78,,1,Partial,0.55,needs_more_context,2,Compliant,0.74,,5,needs_more_context
+systems/Projects/selenium-trunk/java/test/org/openqa/selenium/ElementFindingTest.java:341-345,selenium,systems/Projects/selenium-trunk/java/test/org/openqa/selenium/ElementFindingTest.java,341,345,5,testFindingASingleElementByCompoundClassNameShouldThrow,"void testFindingASingleElementByCompoundClassNameShouldThrow () {
+    driver.get (pages.xhtmlTestPage);
+    assertThatExceptionOfType (InvalidSelectorException.class).isThrownBy (() -> driver.findElement (By.className (""a b"")));
+}",2,Compliant,0.78,,2,Compliant,0.72,,1,Partial,0.55,"No direct instantiation of services is visible, but whether driver/By are abstractions or concrete types is not shown at method level.",5,needs_more_context
+systems/Projects/commons-lang-master/src/main/java/org/apache/commons/lang3/StringUtils.java:1906-1915,commons-lang,systems/Projects/commons-lang-master/src/main/java/org/apache/commons/lang3/StringUtils.java,1906,1915,10,firstNonEmpty,"public static < T extends CharSequence > T firstNonEmpty (final T...values) {
+    if (values != null) {
+        for (final T val : values) {
+            if (isNotEmpty (val)) {
+                return val;
+            }
+        }
+    }
+    return null;
+}",2,Compliant,0.9,,2,Compliant,0.85,,2,Compliant,0.95,,6,
+systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/objectid/AlwaysAsReferenceFirstTest.java:73-83,jackson-databind,systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/objectid/AlwaysAsReferenceFirstTest.java,73,83,11,testIssue1255,"public void testIssue1255 () throws Exception {
+    Foo mo = new Foo ();
+    mo.bar1 = new Bar ();
+    mo.bar2 = mo.bar1;
+    String json = MAPPER.writeValueAsString (mo);
+    Foo result = MAPPER.readValue (json, Foo.class);
+    assertNotNull (result);
+}",1,Partial,0.55,"Method mixes setup, execution, and verification typical of a unit test; whether this is considered a single cohesive responsibility depends on test conventions and surrounding class context.",2,Compliant,0.8,Method contains straight-line orchestration without embedded policy/variant branches.,1,Partial,0.55,"Instantiations appear to be simple data/test objects (not clearly replaceable services), but the static/global MAPPER suggests a non-injected dependency; without class context, coupling severity is uncertain.",4,needs_more_context
+systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/boot/jaxb/internal/AbstractBinder.java:149-174,hibernate-orm,systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/boot/jaxb/internal/AbstractBinder.java,149,174,26,jaxb,"protected < X extends T > X jaxb (XMLEventReader reader, Schema xsd, JAXBContext jaxbContext, Origin origin) {
+    final ContextProvidingValidationEventHandler handler = new ContextProvidingValidationEventHandler ();
+    try {
+        final Unmarshaller unmarshaller = jaxbContext.createUnmarshaller ();
+        if (isValidationEnabled ()) {
+            unmarshaller.setSchema (xsd);
+        }
+        else {
+            unmarshaller.setSchema (null);
+        }
+        unmarshaller.setEventHandler (handler);
+        return (X) unmarshaller.unmarshal (reader);
+    } catch (JAXBException e) {
+        throw new MappingException (""Unable to perform unmarshalling at line number "" + handler.getLineNumber () + "" and column "" + handler.getColumnNumber () + "". Message: "" + handler.getMessage (), e, origin);
+    }
+}",2,Compliant,0.72,,2,Compliant,0.7,,1,Partial,0.55,needs_more_context,5,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/src/fitnesse/wiki/RecentChangesWikiPage.java:21-24,fitnesse,systems/Projects/SolidLeaning/fitnesse/src/fitnesse/wiki/RecentChangesWikiPage.java,21,24,4,makeDateFormat,"private static SimpleDateFormat makeDateFormat () {
+    return new SimpleDateFormat (FitNesseContext.recentChangesDateFormat);
+}",2,Compliant,0.78,,2,Compliant,0.7,,2,Compliant,0.62,,6,
+systems/Projects/selenium-trunk/java/test/org/openqa/selenium/FormHandlingTest.java:295-307,selenium,systems/Projects/selenium-trunk/java/test/org/openqa/selenium/FormHandlingTest.java,295,307,13,canSubmitFormWithSubmitButtonNameEqualToSubmit,"void canSubmitFormWithSubmitButtonNameEqualToSubmit () {
+    String blank = appServer.create (new Page ().withTitle (""Submitted Successfully!""));
+    driver.get (appServer.create (new Page ().withBody (String.format (""<form action='%s'>"", blank), ""  <input type='submit' name='submit' value='Submit'>"", ""</form>"")));
+    driver.findElement (By.name (""submit"")).submit ();
+    wait.until (titleIs (""Submitted Successfully!""));
+}",2,Compliant,0.72,,2,Compliant,0.7,,1,Partial,0.55,"Method uses external collaborators via fields (appServer/driver/wait), but without their types it is unclear whether dependencies are abstracted; local 'new Page()' could be a simple DTO/builder.",5,needs_more_context
+systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/gui/util/FileListPanel.java:153-155,jmeter,systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/gui/util/FileListPanel.java,153,155,3,clearFiles,"public void clearFiles () {
+    tableModel.clearData ();
+}",2,Compliant,0.9,,2,Compliant,0.85,,2,Compliant,0.75,,6,
+systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/gui/util/JDateField.java:155-171,jmeter,systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/gui/util/JDateField.java,155,171,17,update,"private void update (int addend, boolean shifted) {
+    Calendar c = parseDate (getText ());
+    int pos = getCaretPosition ();
+    int field = posToField (pos);
+    if (shifted) {
+        c.roll (field, true);
+    }
+    else {
+        c.add (field, addend);
+    }
+    String newDate = dateFormat.format (c.getTime ());
+    setText (newDate);
+    if (pos > newDate.length ()) {
+        pos = newDate.length ();
+    }
+    final int newPosition = pos;
+    SwingUtilities.invokeLater (() -> setCaretPosition (newPosition));
+}",1,Partial,0.55,Appears to mix state transformation (calendar/date formatting) with UI caret management; whether this is a single cohesive responsibility depends on the class's role as a UI component.,2,Compliant,0.75,No multi-branch variant logic or policy constants; change risk within this method appears low.,2,Compliant,0.8,Method does not create external service objects; dependencies appear to be provided by the surrounding class/framework.,5,needs_more_context
+systems/Projects/jmeter-master/src/components/src/main/java/org/apache/jmeter/gui/action/ExportTransactionAndSamplerNames.java:94-106,jmeter,systems/Projects/jmeter-master/src/components/src/main/java/org/apache/jmeter/gui/action/ExportTransactionAndSamplerNames.java,94,106,13,addNode,"public void addNode (Object object, HashTree subTree) {
+    JMeterTreeNode treeNode = (JMeterTreeNode) object;
+    Object userObject = treeNode.getUserObject ();
+    if (userObject instanceof TransactionController || (userObject instanceof Sampler && ! (userObject instanceof TestAction) && ! (userObject instanceof DebugSampler))) {
+        Matcher matcher = TRANSACTIONS_REGEX.matcher (((TestElement) userObject).getName ());
+        if (! matcher.matches ()) {
+            listOfTransactions.add (((TestElement) userObject).getName ());
+        }
+    }
+}",2,Compliant,0.72,,0,Violated,0.78,,2,Compliant,0.7,,4,
+systems/Projects/struts-main/core/src/test/java/org/apache/struts2/views/jsp/ui/FieldErrorTagTest.java:116-138,struts,systems/Projects/struts-main/core/src/test/java/org/apache/struts2/views/jsp/ui/FieldErrorTagTest.java,116,138,23,testFieldErrorsEscape,"public void testFieldErrorsEscape () throws Exception {
+    FieldErrorTag tag = new FieldErrorTag ();
+    TestAction testAction = new TestAction ();
+    testAction.addFieldError (""f"", ""<p>hey</p>"");
+    stack.pop ();
+    stack.push (testAction);
+    tag.setEscape (true);
+    tag.setPageContext (pageContext);
+    tag.doStartTag ();
+    tag.doEndTag ();
+    assertEquals (normalize (""<ul class=\""errorMessage\""><li><span>&lt;p&gt;hey&lt;/p&gt;</span></li></ul>"", true), normalize (writer.toString (), true));
+    FieldErrorTag freshTag = new FieldErrorTag ();
+    freshTag.setPageContext (pageContext);
+    assertTrue (""Tag state after doEndTag() under default tag clear state is inequal to new Tag with pageContext/parent set.  "" + ""May indicate that clearTagStateForTagPoolingServers() calls are not working properly."", strutsBodyTagsAreReflectionEqual (tag, freshTag));
+}",1,Partial,0.62,"Method mixes two test concerns (escaping output and post-lifecycle state equality). As a test method this may be acceptable, but cohesion depends on test suite conventions.",2,Compliant,0.78,Method does not encode extensibility variants via branching or policy constants; changes would likely be in collaborators or expected strings rather than adding branches here.,1,Partial,0.55,"In a test method, direct instantiation is common; however, without broader context it's unclear whether these are replaceable collaborators or simple test fixtures.",4,needs_more_context
+systems/Projects/selenium-trunk/java/src/org/openqa/selenium/docker/v1_41/PullImage.java:45-79,selenium,systems/Projects/selenium-trunk/java/src/org/openqa/selenium/docker/v1_41/PullImage.java,45,79,35,apply,"public void apply (Reference ref) {
+    Require.nonNull (""Reference to pull"", ref);
+    LOG.info (""Pulling "" + ref);
+    String image = String.format (""%s/%s"", ref.getDomain (), ref.getName ());
+    HttpRequest req = new HttpRequest (POST, String.format (""/v%s/images/create"", DOCKER_API_VERSION)).addHeader (""Content-Type"", JSON_UTF_8).addQueryParameter (""fromImage"", image).addQueryParameter (""platform"", ref.getPlatform ());
+    if (ref.getDigest () != null) {
+        req.addQueryParameter (""tag"", ref.getDigest ());
+    }
+    else if (ref.getTag () != null) {
+        req.addQueryParameter (""tag"", ref.getTag ());
+    }
+    HttpResponse res = client.execute (req);
+    LOG.info (""Have response from server"");
+    if (! res.isSuccessful ()) {
+        String message = ""Unable to pull image: "" + ref.getFamiliarName ();
+        try {
+            Map < String, Object > value = JSON.toType (Contents.string (res), MAP_TYPE);
+            message = (String) value.get (""message"");
+        } catch (Exception e) {
+        }
+        throw new DockerException (message);
+    }
+}",0,Violated,0.75,,1,Partial,0.55,needs_more_context,1,Partial,0.6,needs_more_context,2,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/src/util/StreamReader.java:110-112,fitnesse,systems/Projects/SolidLeaning/fitnesse/src/util/StreamReader.java,110,112,3,getBufferedBytes,"public byte [] getBufferedBytes () {
+    return byteBuffer.toByteArray ();
+}",2,Compliant,0.9,,2,Compliant,0.85,,2,Compliant,0.75,,6,
+systems/Projects/selenium-trunk/java/test/org/openqa/selenium/bidi/log/LogInspectorTest.java:106-126,selenium,systems/Projects/selenium-trunk/java/test/org/openqa/selenium/bidi/log/LogInspectorTest.java,106,126,21,canListenToJavascriptLog,"void canListenToJavascriptLog () throws ExecutionException, InterruptedException, TimeoutException {
+    try (LogInspector logInspector = new LogInspector (driver)) {
+        CompletableFuture < JavascriptLogEntry > future = new CompletableFuture < > ();
+        logInspector.onJavaScriptLog (future :: complete);
+        page = appServer.whereIs (""/bidi/logEntryAdded.html"");
+        driver.get (page);
+        driver.findElement (By.id (""jsException"")).click ();
+        JavascriptLogEntry logEntry = future.get (5, TimeUnit.SECONDS);
+        Source source = logEntry.getSource ();
+        assertThat (source.getBrowsingContext ().isPresent ()).isTrue ();
+        assertThat (source.getRealm ()).isNotNull ();
+        assertThat (logEntry.getText ()).isEqualTo (""Error: Not working"");
+        assertThat (logEntry.getType ()).isEqualTo (""javascript"");
+        assertThat (logEntry.getLevel ()).isEqualTo (LogLevel.ERROR);
+    }
+}",0,Violated,0.75,"Method mixes setup, driving the system under test, waiting for async result, and verifying multiple properties.",1,Partial,0.55,"No variant-encoding branch chains; however, several hard-coded expectations/timeouts suggest changes would modify this method. needs_more_context",0,Violated,0.7,"Creating CompletableFuture is typically fine, but directly constructing LogInspector in-method indicates tight coupling to a concrete type.",1,needs_more_context
+systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/gui/action/What.java:66-99,jmeter,systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/gui/action/What.java,66,99,34,doAction,"public void doAction (ActionEvent e) throws IllegalUserActionException {
+    JMeterTreeNode node = GuiPackage.getInstance ().getTreeListener ().getCurrentNode ();
+    TestElement te = (TestElement) node.getUserObject ();
+    if (ActionNames.WHAT_CLASS.equals (e.getActionCommand ())) {
+        String guiClassName = te.getPropertyAsString (TestElement.GUI_CLASS);
+        System.out.println (te.getClass ().getName ());
+        System.out.println (guiClassName);
+        if (log.isInfoEnabled ()) {
+            log.info (""TestElement: {}, guiClassName: {}"", te.getClass (), guiClassName);
+        }
+    }
+    else if (ActionNames.DEBUG_ON.equals (e.getActionCommand ())) {
+        final String loggerName = te.getClass ().getName ();
+        Configurator.setAllLevels (loggerName, Level.DEBUG);
+        log.info (""Log level set to DEBUG for {}"", loggerName);
+    }
+    else if (ActionNames.DEBUG_OFF.equals (e.getActionCommand ())) {
+        final String loggerName = te.getClass ().getName ();
+        Configurator.setAllLevels (loggerName, Level.INFO);
+        log.info (""Log level set to INFO for {}"", loggerName);
+    }
+    else if (ActionNames.HEAP_DUMP.equals (e.getActionCommand ())) {
+        try {
+            String s = HeapDumper.dumpHeap ();
+            JOptionPane.showMessageDialog (null, ""Created "" + s, ""HeapDump"", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog (null, ex.toString (), ""HeapDump"", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    else if (ActionNames.THREAD_DUMP.equals (e.getActionCommand ())) {
+        try {
+            String s = ThreadDumper.threadDump ();
+            JOptionPane.showMessageDialog (null, ""Created "" + s, ""ThreadDump"", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog (null, ex.toString (), ""ThreadDump"", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}",0,Violated,0.85,,0,Violated,0.8,,0,Violated,0.75,,0,
+systems/Projects/commons-lang-master/src/test/java/org/apache/commons/lang3/ArrayUtilsRemoveMultipleTest.java:318-320,commons-lang,systems/Projects/commons-lang-master/src/test/java/org/apache/commons/lang3/ArrayUtilsRemoveMultipleTest.java,318,320,3,testRemoveAllDoubleArrayOutOfBoundsIndex,"public void testRemoveAllDoubleArrayOutOfBoundsIndex () {
+    assertThrows (IndexOutOfBoundsException.class, () -> ArrayUtils.removeAll (new double [] {1, 2}, 2));
+}",2,Compliant,0.9,,2,Compliant,0.85,,2,Compliant,0.8,,6,
+systems/Projects/SolidLeaning/fitnesse/test/fitnesse/junit/JUnitRunNotifierResultsListenerTest.java:39-42,fitnesse,systems/Projects/SolidLeaning/fitnesse/test/fitnesse/junit/JUnitRunNotifierResultsListenerTest.java,39,42,4,setUp,"public void setUp () {
+    description = Description.createTestDescription (""myTest"", ""bla"");
+    when (descriptionFactory.createDescription (eq (getClass ()), any (TestPage.class))).thenReturn (description);
+}",2,Compliant,0.78,,2,Compliant,0.72,,1,Partial,0.55,"The created type (Description) and mocking calls may be acceptable in test code, but method-level structure shows direct coupling to concrete/framework APIs.",5,
+systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/sql/results/graph/instantiation/internal/DynamicInstantiationAssemblerInjectionImpl.java:34-53,hibernate-orm,systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/sql/results/graph/instantiation/internal/DynamicInstantiationAssemblerInjectionImpl.java,34,53,20,DynamicInstantiationAssemblerInjectionImpl,"public DynamicInstantiationAssemblerInjectionImpl (JavaType < T > target, List < ArgumentReader < ? > > argumentReaders) {
+    this.target = target;
+    final Class < ? > targetJavaType = target.getJavaTypeClass ();
+    final List < BeanInjection > beanInjections = new ArrayList < > (argumentReaders.size ());
+    BeanInfoHelper.visitBeanInfo (targetJavaType, beanInfo -> {
+        for (ArgumentReader < ? > argumentReader : argumentReaders) {
+            beanInjections.add (injection (beanInfo, argumentReader, targetJavaType));
+        }
+    });
+    if (argumentReaders.size () != beanInjections.size ()) {
+        throw new IllegalStateException (""The number of readers did not match the number of injections"");
+    }
+    this.beanInjections = beanInjections;
+}",1,Partial,0.55,Constructor mixes object initialization with reflective/bean-introspection-driven assembly and an invariant check; whether this is a single cohesive responsibility depends on class-level design.,2,Compliant,0.75,Method structure suggests extension points are in delegated methods/collaborators rather than encoded as local branching.,2,Compliant,0.7,"The only 'new' is a standard collection; other dependencies are referenced, not constructed here.",5,needs_more_context
+systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/ser/std/JsonValueSerializer.java:294-332,jackson-databind,systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/ser/std/JsonValueSerializer.java,294,332,39,serializeWithType,"public void serializeWithType (Object bean, JsonGenerator gen, SerializerProvider ctxt, TypeSerializer typeSer0) throws IOException {
+    Object value;
+    try {
+        value = _accessor.getValue (bean);
+    } catch (Exception e) {
+        value = null;
+        wrapAndThrow (ctxt, e, bean, _accessor.getName () + ""()"");
+    }
+    if (value == null) {
+        ctxt.defaultSerializeNull (gen);
+        return;
+    }
+    JsonSerializer < Object > ser = _valueSerializer;
+    if (ser == null) {
+        ser = _findDynamicSerializer (ctxt, value.getClass ());
+    }
+    else {
+        if (_forceTypeInformation) {
+            WritableTypeId typeIdDef = typeSer0.writeTypePrefix (gen, typeSer0.typeId (bean, JsonToken.VALUE_STRING));
+            ser.serialize (value, gen, ctxt);
+            typeSer0.writeTypeSuffix (gen, typeIdDef);
+            return;
+        }
+    }
+    TypeSerializerRerouter rr = new TypeSerializerRerouter (typeSer0, bean);
+    ser.serializeWithType (value, gen, ctxt, rr);
+}",2,Compliant,0.72,,2,Compliant,0.7,,1,Partial,0.55,needs_more_context: cannot determine if TypeSerializerRerouter is a simple local helper/value wrapper (acceptable) or a replaceable collaborator whose construction should be inverted.,5,needs_more_context
+systems/Projects/jmeter-master/src/functions/src/test/java/org/apache/jmeter/functions/TestTimeShiftFunction.java:105-112,jmeter,systems/Projects/jmeter-master/src/functions/src/test/java/org/apache/jmeter/functions/TestTimeShiftFunction.java,105,112,8,testNowPlusOneDay,"void testNowPlusOneDay () throws Exception {
+    Collection < CompoundVariable > params = makeParams (""yyyy-MM-dd"", """", ""P1d"", """");
+    function.setParameters (params);
+    value = function.execute (result, null);
+    LocalDate tomorrow = LocalDate.now (ZoneId.systemDefault ()).plusDays (1);
+    LocalDate tomorrowFromFunction = LocalDate.parse (value);
+    assertThat (tomorrowFromFunction, sameDay (tomorrow));
+}",2,Compliant,0.78,,2,Compliant,0.7,,2,Compliant,0.74,,6,
+systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java:746-778,jackson-databind,systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java,746,778,33,serializeFields,"protected void serializeFields (Object bean, JsonGenerator gen, SerializerProvider provider) throws IOException {
+    final BeanPropertyWriter [] props;
+    if (_filteredProps != null && provider.getActiveView () != null) {
+        props = _filteredProps;
+    }
+    else {
+        props = _props;
+    }
+    int i = 0;
+    try {
+        for (final int len = props.length; i < len; ++ i) {
+            BeanPropertyWriter prop = props [i];
+            if (prop != null) {
+                prop.serializeAsField (bean, gen, provider);
+            }
+        }
+    } catch (Exception e) {
+        String name = (i == props.length) ? ""[anySetter]"" : props [i].getName ();
+        wrapAndThrow (provider, e, bean, name);
+    } catch (StackOverflowError e) {
+        DatabindException mapE = new JsonMappingException (gen, ""Infinite recursion (StackOverflowError)"", e);
+        String name = (i == props.length) ? ""[anySetter]"" : props [i].getName ();
+        mapE.prependPath (bean, name);
+        throw mapE;
+    }
+}",2,Compliant,0.72,,2,Compliant,0.7,,1,Partial,0.55,needs_more_context,5,needs_more_context
+systems/Projects/struts-main/core/src/main/java/org/apache/struts2/XWorkTestCase.java:108-110,struts,systems/Projects/struts-main/core/src/main/java/org/apache/struts2/XWorkTestCase.java,108,110,3,type,"public Class < T > type () {
+    return (Class < T >) impl.getClass ();
+}",2,Compliant,0.78,,2,Compliant,0.74,,1,Partial,0.45,needs_more_context: cannot determine whether 'impl' is an abstraction/injected dependency or a concrete collaborator.,5,needs_more_context
+systems/Projects/junit5-main/platform-tooling-support-tests/src/test/java/platform/tooling/support/tests/MavenStarterTests.java:83-96,junit5,systems/Projects/junit5-main/platform-tooling-support-tests/src/test/java/platform/tooling/support/tests/MavenStarterTests.java,83,96,14,runMaven,"private ProcessResult runMaven (OutputFiles outputFiles, String...extraArgs) throws InterruptedException {
+    var result = ProcessStarters.maven (Helper.getJavaHome (8).orElseThrow (TestAbortedException :: new)).workingDir (workspace).addArguments (localMavenRepo.toCliArgument (), ""-Dmaven.repo="" + MavenRepo.dir ()).addArguments (""-Dsnapshot.repo.url="" + mavenRepoProxy.getBaseUri ()).addArguments (""--update-snapshots"", ""--batch-mode"").addArguments (extraArgs).redirectOutput (outputFiles).startAndWait ();
+    assertEquals (0, result.exitCode ());
+    assertEquals ("""", result.stdErr ());
+    assertThat (result.stdOutLines ()).contains (""[INFO] BUILD SUCCESS"");
+    return result;
+}",0,Violated,0.75,"Method mixes process orchestration with test assertions/validation, indicating more than one responsibility at method level.",1,Partial,0.55,"No variant-encoding branching, but several hard-coded flags/expected strings suggest future changes may require modifying this method. needs_more_context",1,Partial,0.6,"Method depends on concrete/static collaborators (process starter, environment helper, repo locator). Without class context, cannot tell if these are intentionally fixed test utilities or replaceable abstractions. needs_more_context",2,needs_more_context
+systems/Projects/junit5-main/junit-platform-commons/src/main/java9/org/junit/platform/commons/util/ModuleUtils.java:243-247,junit5,systems/Projects/junit5-main/junit-platform-commons/src/main/java9/org/junit/platform/commons/util/ModuleUtils.java,243,247,5,className,"private String className (String resourceName) {
+    resourceName = resourceName.substring (0, resourceName.length () - 6);
+    resourceName = resourceName.replace ('/', '.');
+    return resourceName;
+}",2,Compliant,0.9,,1,Partial,0.55,"No branching, but the embedded constant and direct transformation logic could require editing this method if the transformation rules change.",2,Compliant,0.95,,5,
+systems/Projects/jmeter-master/src/protocol/http/src/main/java/org/apache/jmeter/protocol/http/gui/HTTPArgumentsPanel.java:123-133,jmeter,systems/Projects/jmeter-master/src/protocol/http/src/main/java/org/apache/jmeter/protocol/http/gui/HTTPArgumentsPanel.java,123,133,11,getUnclonedParameters,"private Arguments getUnclonedParameters () {
+    stopTableEditing ();
+    @SuppressWarnings (""unchecked"")
+    Iterator < HTTPArgument > modelData = (Iterator < HTTPArgument >) tableModel.iterator ();
+    Arguments args = new Arguments ();
+    while (modelData.hasNext ()) {
+        HTTPArgument arg = modelData.next ();
+        args.addArgument (arg);
+    }
+    return args;
+}",2,Compliant,0.78,,2,Compliant,0.72,,1,Partial,0.55,needs_more_context,5,needs_more_context
+systems/Projects/struts-main/plugins/convention/src/test/java/org/apache/struts2/convention/actions/interceptor/InterceptorsAction.java:46-48,struts,systems/Projects/struts-main/plugins/convention/src/test/java/org/apache/struts2/convention/actions/interceptor/InterceptorsAction.java,46,48,3,run4,"public String run4 () {
+    return null;
+}",2,Compliant,0.7,,2,Compliant,0.75,,2,Compliant,0.8,,6,
+systems/Projects/selenium-trunk/java/src/org/openqa/selenium/grid/node/httpd/NodeServer.java:205-254,selenium,systems/Projects/selenium-trunk/java/src/org/openqa/selenium/grid/node/httpd/NodeServer.java,205,254,50,start,"public NettyServer start () {
+    super.start ();
+    RetryPolicy < Object > registrationPolicy = RetryPolicy.builder ().withMaxAttempts (- 1).withMaxDuration (nodeOptions.getRegisterPeriod ()).withDelay (nodeOptions.getRegisterCycle ()).handleResultIf (result -> true).onFailure (event -> {
+        LOG.severe (String.format (""Registration event failed after period of %s seconds. Node will not"" + "" attempt to register again"", nodeOptions.getRegisterPeriod ().getSeconds ()));
+        if (nodeOptions.getRegisterShutdownOnFailure ()) {
+            LOG.severe (""Shutting down"");
+            System.exit (1);
+        }
+    }).build ();
+    LOG.info (""Starting registration process for Node "" + node.getUri ());
+    ExecutorService executor = Executors.newSingleThreadExecutor ();
+    executor.submit (() -> {
+        Failsafe.with (registrationPolicy).run (() -> {
+            if (node.isRegistered ()) {
+                throw new InterruptedException (""Stopping registration thread."");
+            }
+            HealthCheck.Result check = node.getHealthCheck ().check ();
+            if (DOWN.equals (check.getAvailability ())) {
+                LOG.severe (""Node is not alive: "" + check.getMessage ());
+                throw new UnsupportedOperationException (""Node cannot be registered"");
+            }
+            bus.fire (new NodeStatusEvent (node.getStatus ()));
+            LOG.info (""Sending registration event..."");
+        });
+    });
+    executor.shutdown ();
+    return this;
+}",0,Violated,0.75,"Method mixes policy construction, concurrency management, and registration/health-check workflow with side effects (logging, event firing, process exit).",1,Partial,0.55,"Only a couple of branches, but the method hard-codes retry/termination behavior and health-check gating; extensibility intent is unclear at method level.",0,Violated,0.8,"Method introduces hard-wired concrete dependencies (threading, process exit, static library access) that are not easily replaceable via abstraction.",1,needs_more_context
+systems/Projects/struts-main/core/src/main/java/org/apache/struts2/components/Bean.java:112-114,struts,systems/Projects/struts-main/core/src/main/java/org/apache/struts2/components/Bean.java,112,114,3,setReflectionProvider,"public void setReflectionProvider (ReflectionProvider prov) {
+    this.reflectionProvider = prov;
+}",2,Compliant,0.9,,2,Compliant,0.85,,2,Compliant,0.85,,6,
+systems/Projects/junit5-main/junit-platform-console/src/main/java/org/junit/platform/console/tasks/TestFeedPrintingListener.java:68-83,junit5,systems/Projects/junit5-main/junit-platform-console/src/main/java/org/junit/platform/console/tasks/TestFeedPrintingListener.java,68,83,16,executionFinished,"public void executionFinished (TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+    TestExecutionResult.Status status = testExecutionResult.getStatus ();
+    if (testExecutionResult.getThrowable ().isPresent ()) {
+        Style style = Style.valueOf (testExecutionResult);
+        String msg = formatTestIdentifier (testIdentifier);
+        Throwable throwable = testExecutionResult.getThrowable ().get ();
+        String stacktrace = indented (ExceptionUtils.readStackTrace (throwable));
+        println (style, String.format (""%s"" + STATUS_SEPARATOR + ""%s%n"" + INDENTATION + ""%s"", msg, status, stacktrace));
+    }
+    else if (shouldPrint (testIdentifier) || testExecutionResult.getStatus () != SUCCESSFUL) {
+        Style style = Style.valueOf (testExecutionResult);
+        String msg = formatTestIdentifier (testIdentifier);
+        println (style, String.format (""%s"" + STATUS_SEPARATOR + ""%s"", msg, status));
+    }
+}",1,Partial,0.55,"Appears to handle 'print result on execution finished', but whether this is a single responsibility depends on the class role and expected listener behavior.",1,Partial,0.6,"Only 2 branches, but they represent distinct formatting behaviors; unclear if future variants are expected or handled via polymorphism elsewhere.",2,Compliant,0.75,Method does not create replaceable dependencies; any coupling to output/formatting is via existing methods/utilities not instantiated here.,4,needs_more_context
+systems/Projects/jmeter-master/src/protocol/ldap/src/main/java/org/apache/jmeter/protocol/ldap/sampler/LdapClient.java:82-91,jmeter,systems/Projects/jmeter-master/src/protocol/ldap/src/main/java/org/apache/jmeter/protocol/ldap/sampler/LdapClient.java,82,91,10,disconnect,"public void disconnect () {
+    try {
+        if (dirContext != null) {
+            dirContext.close ();
+            dirContext = null;
+        }
+    } catch (NamingException e) {
+        log.error (""Ldap client - "", e);
+    }
+}",2,Compliant,0.78,,2,Compliant,0.7,,1,Partial,0.55,"No instantiation of collaborators in the method, but dependency management (injected vs concrete/static) is not visible here.",5,needs_more_context
+systems/Projects/struts-main/plugins/tiles/src/test/java/org/apache/tiles/api/AttributeTest.java:191-197,struts,systems/Projects/struts-main/plugins/tiles/src/test/java/org/apache/tiles/api/AttributeTest.java,191,197,7,testToString,"public void testToString () {
+    Expression expression = new Expression (""my.expression"", ""MYLANG"");
+    Attribute attribute = new Attribute (""my.value"", expression, ""role1,role2"", ""myrenderer"");
+    assertEquals (""my.value"", attribute.toString ());
+    attribute.setValue (null);
+    assertNotNull (attribute.toString ());
+}",2,Compliant,0.78,,2,Compliant,0.72,,1,Partial,0.55,"These appear to be domain/value objects in a test, but without broader context it's unclear whether they are replaceable collaborators or simple data types.",5,needs_more_context
+systems/Projects/struts-main/core/src/test/java/org/apache/struts2/validator/IntRangeValidatorTest.java:64-69,struts,systems/Projects/struts-main/core/src/test/java/org/apache/struts2/validator/IntRangeValidatorTest.java,64,69,6,setUp,"protected void setUp () throws Exception {
+    super.setUp ();
+    XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider (""xwork-test-beans.xml"");
+    container.inject (provider);
+    loadConfigurationProviders (provider, new MockConfigurationProvider ());
+}",2,Compliant,0.72,Method is a thin setup routine with sequential delegation typical of test fixtures.,2,Compliant,0.7,No structural signs of variant-encoding logic that would require modification for extensions.,0,Violated,0.78,"Method constructs concrete dependencies instead of receiving them via abstraction/injection (even though it later calls ""container.inject(provider)"").",4,
+systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/dialect/type/PostgreSQLJsonPGObjectJsonbType.java:19-21,hibernate-orm,systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/dialect/type/PostgreSQLJsonPGObjectJsonbType.java,19,21,3,PostgreSQLJsonPGObjectJsonbType,"protected PostgreSQLJsonPGObjectJsonbType (EmbeddableMappingType embeddableMappingType, boolean jsonb) {
+    super (embeddableMappingType, jsonb);
+}",2,Compliant,0.9,,2,Compliant,0.85,,2,Compliant,0.8,,6,
+systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertyBuilder.java:944-994,jackson-databind,systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertyBuilder.java,944,994,51,removeNonVisible,"public JsonProperty.Access removeNonVisible (boolean inferMutators, POJOPropertiesCollector parent) {
+    JsonProperty.Access acc = findAccess ();
+    if (acc == null) {
+        acc = JsonProperty.Access.AUTO;
+    }
+    switch (acc) {
+        case READ_ONLY :
+            if (parent != null) {
+                parent._collectIgnorals (getName ());
+                for (PropertyName pn : findExplicitNames ()) {
+                    parent._collectIgnorals (pn.getSimpleName ());
+                }
+            }
+            _setters = null;
+            _ctorParameters = null;
+            if (! _forSerialization) {
+                _fields = null;
+            }
+            break;
+        case READ_WRITE :
+            break;
+        case WRITE_ONLY :
+            _getters = null;
+            if (_forSerialization) {
+                _fields = null;
+            }
+            break;
+        default :
+        case AUTO :
+            _getters = _removeNonVisible (_getters);
+            _ctorParameters = _removeNonVisible (_ctorParameters);
+            if (! inferMutators || (_getters == null)) {
+                _fields = _removeNonVisible (_fields);
+                _setters = _removeNonVisible (_setters);
+            }
+    }
+    return acc;
+}",1,Partial,0.55,Method appears to both compute/return an access value and mutate internal state (and optionally notify parent). Whether this is a single cohesive responsibility depends on class-level design.,0,Violated,0.8,"Method hard-codes per-access behavior in a switch, increasing modification risk when variants change.",2,Compliant,0.85,Method does not introduce new concrete dependencies; it operates on existing fields/parameters.,3,needs_more_context
+systems/Projects/struts-main/plugins/javatemplates/src/main/java/org/apache/struts2/views/java/simple/LabelHandler.java:30-45,struts,systems/Projects/struts-main/plugins/javatemplates/src/main/java/org/apache/struts2/views/java/simple/LabelHandler.java,30,45,16,generate,"public void generate () throws IOException {
+    Map < String, Object > params = context.getParameters ();
+    Attributes a = new Attributes ();
+    a.addDefaultToEmpty (""name"", params.get (""name"")).addIfExists (""for"", params.get (""for"")).addIfExists (""id"", params.get (""id"")).addIfExists (""class"", params.get (""cssClass"")).addIfExists (""style"", params.get (""cssStyle"")).addIfExists (""title"", params.get (""title""));
+    super.start (""label"", a);
+    String value = (String) params.get (""nameValue"");
+    if (StringUtils.isNotEmpty (value)) characters (value);
+    super.end (""label"");
+}",2,Compliant,0.72,,2,Compliant,0.66,,1,Partial,0.55,Cannot determine from the method alone whether Attributes is a simple value/helper type (acceptable) or a replaceable collaborator; static utility usage may indicate coupling but not necessarily a replaceable dependency.,5,needs_more_context
+systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java:604-631,jackson-databind,systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java,604,631,28,resolveSetterConflict,"public AnnotatedMethod resolveSetterConflict (MapperConfig < ? > config, AnnotatedMethod setter1, AnnotatedMethod setter2) {
+    Class < ? > cls1 = setter1.getRawParameterType (0);
+    Class < ? > cls2 = setter2.getRawParameterType (0);
+    if (cls1.isPrimitive ()) {
+        if (! cls2.isPrimitive ()) {
+            return setter1;
+        }
+        return null;
+    }
+    else if (cls2.isPrimitive ()) {
+        return setter2;
+    }
+    if (cls1 == String.class) {
+        if (cls2 != String.class) {
+            return setter1;
+        }
+    }
+    else if (cls2 == String.class) {
+        return setter2;
+    }
+    return null;
+}",2,Compliant,0.78,,1,Partial,0.62,needs_more_context,2,Compliant,0.86,,5,needs_more_context
+systems/Projects/selenium-trunk/java/test/org/openqa/selenium/bidi/script/ScriptEventsTest.java:68-81,selenium,systems/Projects/selenium-trunk/java/test/org/openqa/selenium/bidi/script/ScriptEventsTest.java,68,81,14,canListenToRealmCreatedEvent,"void canListenToRealmCreatedEvent () throws ExecutionException, InterruptedException, TimeoutException {
+    try (Script script = new Script (driver)) {
+        CompletableFuture < RealmInfo > future = new CompletableFuture < > ();
+        script.onRealmCreated (future :: complete);
+        BrowsingContext context = new BrowsingContext (driver, driver.getWindowHandle ());
+        context.navigate (new Pages (appServer).blankPage);
+        RealmInfo realmInfo = future.get (5, TimeUnit.SECONDS);
+        assertThat (realmInfo.getRealmId ()).isNotNull ();
+        assertThat (realmInfo.getRealmType ()).isEqualTo (RealmType.WINDOW);
+    }
+}",1,Partial,0.55,"Method mixes setup, action, waiting, and verification; in a test this may be cohesive, but class/test conventions are not visible.",0,Violated,0.75,No extensibility mechanism is visible; changes to timing/expected type would require modifying this method.,0,Violated,0.8,Method constructs concrete collaborators directly rather than receiving abstractions/injected dependencies.,1,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/refactoring/SearchReplaceMethodResponderTest.java:103-130,fitnesse,systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/refactoring/SearchReplaceMethodResponderTest.java,103,130,28,replacementsWithDifferentTextEvaluatedToSameMethodTwoParams,"public void replacementsWithDifferentTextEvaluatedToSameMethodTwoParams () throws Exception {
+    WikiPageUtil.addPage (somePage, PathParser.parse (""ChildPage1""), ""|update value|param|with value|newParam|"");
+    WikiPageUtil.addPage (somePage, PathParser.parse (""ChildPage2""), ""|update|param|value with|newParam|value|"");
+    WikiPageUtil.addPage (somePage, PathParser.parse (""ChildPage3""), ""|update|param|value with value|newParam|"");
+    WikiPageUtil.addPage (somePage, PathParser.parse (""ChildPage4""), ""|ensure|update value|param|with value|newParam|"");
+    WikiPageUtil.addPage (somePage, PathParser.parse (""ChildPage5""), ""|reject|update value|param|with value|newParam|"");
+    WikiPageUtil.addPage (somePage, PathParser.parse (""ChildPage6""), ""|check|update value|param|with value|newParam|someValue|"");
+    WikiPageUtil.addPage (somePage, PathParser.parse (""ChildPage7""), ""|check not|update value|param|with value|newParam|someValue|"");
+    WikiPageUtil.addPage (somePage, PathParser.parse (""ChildPage8""), ""|note|update value|param|with value|newParam|"");
+    WikiPageUtil.addPage (somePage, PathParser.parse (""ChildPage9""), ""| |update value|param|with value|newParam|"");
+    WikiPageUtil.addPage (somePage, PathParser.parse (""ChildPage10""), ""|show|update value|param|with value|newParam|"");
+    WikiPageUtil.addPage (somePage, PathParser.parse (""ChildPage11""), ""|$value=|update value|param|with value|newParam|"");
+    String content = getResponseContentUsingSearchReplace (""|update value|param|with value|newParam|"", ""|updated value|param|with value|newParam|"");
+    assertThat (content, containsString (""ChildPage1""));
+    assertThat (content, containsString (""ChildPage2""));
+    assertThat (content, containsString (""ChildPage3""));
+    assertThat (content, containsString (""ChildPage4""));
+    assertThat (content, containsString (""ChildPage5""));
+    assertThat (content, containsString (""ChildPage6""));
+    assertThat (content, containsString (""ChildPage7""));
+    assertThat (content, containsString (""ChildPage8""));
+    assertThat (content, containsString (""ChildPage9""));
+    assertThat (content, containsString (""ChildPage10""));
+    assertThat (content, containsString (""ChildPage11""));
+}",1,Partial,0.55,Method is a test; within the method it performs both fixture construction and assertions. Whether this is considered a single cohesive responsibility depends on test conventions and class context.,1,Partial,0.6,"Method is linear with no variant-encoding control flow, but extensibility is limited by hard-coded test data; OCP relevance is uncertain at method level for tests.",2,Compliant,0.75,Method does not create replaceable collaborators directly; it relies on existing utilities and test helpers.,4,needs_more_context
+systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/deser/std/JsonNodeDeserializer.java:352-381,jackson-databind,systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/deser/std/JsonNodeDeserializer.java,352,381,30,_handleDuplicateField,"protected void _handleDuplicateField (JsonParser p, DeserializationContext ctxt, JsonNodeFactory nodeFactory, String fieldName, ObjectNode objectNode, JsonNode oldValue, JsonNode newValue) throws IOException {
+    if (ctxt.isEnabled (DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY)) {
+        ctxt.reportInputMismatch (JsonNode.class, ""Duplicate field '%s' for `ObjectNode`: not allowed when `DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY` enabled"", fieldName);
+    }
+    if (ctxt.isEnabled (StreamReadCapability.DUPLICATE_PROPERTIES)) {
+        if (oldValue.isArray ()) {
+            ((ArrayNode) oldValue).add (newValue);
+            objectNode.replace (fieldName, oldValue);
+        }
+        else {
+            ArrayNode arr = nodeFactory.arrayNode ();
+            arr.add (oldValue);
+            arr.add (newValue);
+            objectNode.replace (fieldName, arr);
+        }
+    }
+}",2,Compliant,0.78,,1,Partial,0.55,needs_more_context,2,Compliant,0.8,,5,needs_more_context
+systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertiesCollector.java:747-767,jackson-databind,systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertiesCollector.java,747,767,21,_isDelegatingConstructor,"private boolean _isDelegatingConstructor (PotentialCreator ctor) {
+    switch (ctor.creatorModeOrDefault ()) {
+        case DELEGATING :
+            return true;
+        case DISABLED :
+        case PROPERTIES :
+            return false;
+        default :
+    }
+    if (ctor.paramCount () == 1) {
+        if ((_jsonValueAccessors != null) && ! _jsonValueAccessors.isEmpty ()) {
+            return true;
+        }
+    }
+    return false;
+}",2,Compliant,0.78,,1,Partial,0.55,"Branching may be simple control flow, but it also appears to encode policy variants; cannot confirm extensibility mechanisms beyond this method.",2,Compliant,0.86,,5,needs_more_context
+systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/module/SimpleModuleTest.java:56-58,jackson-databind,systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/module/SimpleModuleTest.java,56,58,3,getSchema,"public JsonNode getSchema (SerializerProvider provider, Type typeHint) {
+    return null;
+}",1,Partial,0.35,Cannot determine responsibility/cohesion because the method is unimplemented.,2,Compliant,0.6,"Method contains no logic that would need modification for new variants; however, it is a stub.",2,Compliant,0.7,No observable tight coupling introduced within the method.,5,needs_more_context
+systems/Projects/jmeter-master/src/components/src/main/java/org/apache/jmeter/visualizers/PropertyControlGui.java:199-210,jmeter,systems/Projects/jmeter-master/src/components/src/main/java/org/apache/jmeter/visualizers/PropertyControlGui.java,199,210,12,initializeTableModel,"private void initializeTableModel () {
+    tableModel = new ObjectTableModel (new String [] {COLUMN_NAMES_0, COLUMN_NAMES_1}, new Functor [] {new Functor (Map.Entry.class, ""getKey""), new Functor (Map.Entry.class, ""getValue"")}, new Functor [] {null, new Functor (Map.Entry.class, ""setValue"", new Class [] {Object.class})}, new Class [] {String.class, String.class});
+}",2,Compliant,0.78,,1,Partial,0.55,needs_more_context,0,Violated,0.74,,3,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/test/fitnesse/wikitext/parser/HeadingsTest.java:26-29,fitnesse,systems/Projects/SolidLeaning/fitnesse/test/fitnesse/wikitext/parser/HeadingsTest.java,26,29,4,setUpLineSeparator,"public void setUpLineSeparator () {
+    originalLineSeparator = System.getProperty (LINE_SEPARATOR);
+    System.setProperty (LINE_SEPARATOR, ""\n"");
+}",2,Compliant,0.72,,1,Partial,0.45,needs_more_context,0,Violated,0.8,,3,needs_more_context
+systems/Projects/junit5-main/jupiter-tests/src/test/java/org/junit/jupiter/engine/descriptor/JupiterTestDescriptorTests.java:64-70,junit5,systems/Projects/junit5-main/jupiter-tests/src/test/java/org/junit/jupiter/engine/descriptor/JupiterTestDescriptorTests.java,64,70,7,constructFromClass,"void constructFromClass () {
+    ClassTestDescriptor descriptor = new ClassTestDescriptor (uniqueId, TestCase.class, configuration);
+    assertEquals (TestCase.class, descriptor.getTestClass ());
+    assertThat (descriptor.getTags ()).containsExactly (TestTag.create (""inherited-class-level-tag""), TestTag.create (""classTag1""), TestTag.create (""classTag2""));
+}",2,Compliant,0.78,,2,Compliant,0.72,,1,Partial,0.55,needs_more_context,5,needs_more_context
+systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/introspect/AccessorNamingStrategyTest.java:70-75,jackson-databind,systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/introspect/AccessorNamingStrategyTest.java,70,75,6,findNameForRegularGetter,"public String findNameForRegularGetter (AnnotatedMethod method, String name) {
+    if (name.startsWith (""Get"")) {
+        return name.substring (3);
+    }
+    return null;
+}",2,Compliant,0.9,,1,Partial,0.55,needs_more_context,2,Compliant,0.85,,5,needs_more_context
+systems/Projects/commons-lang-master/src/main/java/org/apache/commons/lang3/util/FluentBitSet.java:129-131,commons-lang,systems/Projects/commons-lang-master/src/main/java/org/apache/commons/lang3/util/FluentBitSet.java,129,131,3,cardinality,"public int cardinality () {
+    return bitSet.cardinality ();
+}",2,Compliant,0.9,,2,Compliant,0.85,,1,Partial,0.55,needs_more_context: cannot determine whether 'bitSet' is an abstracted dependency or a fixed concrete collaborator from this method alone.,5,needs_more_context
+systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/struct/UnwrapSingleArrayScalarsTest.java:416-438,jackson-databind,systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/struct/UnwrapSingleArrayScalarsTest.java,416,438,23,testBigInteger,"public void testBigInteger () throws Exception {
+    BigInteger value = new BigInteger (""-1234567890123456789012345567809"");
+    BigInteger result = NO_UNWRAPPING_READER.readValue (value.toString (), BigInteger.class);
+    assertEquals (value, result);
+    try {
+        NO_UNWRAPPING_READER.readValue (""["" + value.toString () + ""]"", BigInteger.class);
+        fail (""Exception was not thrown when attempting to read a single value array of BigInteger when UNWRAP_SINGLE_VALUE_ARRAYS feature is disabled"");
+    } catch (MismatchedInputException exp) {
+        _verifyNoDeserFromArray (exp);
+    }
+    result = UNWRAPPING_READER.readValue (""["" + value.toString () + ""]"", BigInteger.class);
+    assertEquals (value, result);
+    try {
+        UNWRAPPING_READER.readValue (""["" + value.toString () + "","" + value.toString () + ""]"", BigInteger.class);
+        fail (""Exception was not thrown when attempting to read a multi-value array of BigInteger when UNWRAP_SINGLE_VALUE_ARRAYS feature is enabled"");
+    } catch (MismatchedInputException exp) {
+        verifyException (exp, ""Attempted to unwrap"");
+    }
+}",2,Compliant,0.72,,2,Compliant,0.7,,1,Partial,0.55,needs_more_context,5,needs_more_context
+systems/Projects/jmeter-master/src/protocol/http/src/test/java/org/apache/jmeter/gui/action/ParseCurlCommandActionTest.java:459-468,jmeter,systems/Projects/jmeter-master/src/protocol/http/src/test/java/org/apache/jmeter/gui/action/ParseCurlCommandActionTest.java,459,468,10,testDnsServer,"public void testDnsServer () throws Exception {
+    ParseCurlCommandAction p = new ParseCurlCommandAction ();
+    DNSCacheManager dnsCacheManager = new DNSCacheManager ();
+    BasicCurlParser basicCurlParser = new BasicCurlParser ();
+    Request request = basicCurlParser.parse (""curl 'http://jmeter.apache.org/' --dns-servers '0.0.0.0'"");
+    Method method = getMethodFor (""createDnsServer"", Request.class, DNSCacheManager.class);
+    method.invoke (p, request, dnsCacheManager);
+    assertEquals (""0.0.0.0"", dnsCacheManager.getServers ().get (0).getStringValue (), ""the dns server should be set in DNSCacheManager"");
+}",2,Compliant,0.78,,2,Compliant,0.7,,1,Partial,0.55,"As a unit test, direct instantiation may be acceptable; without broader context it's unclear whether these are replaceable collaborators or simple helpers.",5,needs_more_context
+systems/Projects/junit5-main/platform-tests/src/test/java/org/junit/platform/launcher/core/DefaultLauncherEngineFilterTests.java:151-168,junit5,systems/Projects/junit5-main/platform-tests/src/test/java/org/junit/platform/launcher/core/DefaultLauncherEngineFilterTests.java,151,168,18,launcherThrowsExceptionWhenNoEngineMatchesIncludeEngineFilter,"void launcherThrowsExceptionWhenNoEngineMatchesIncludeEngineFilter (@TrackLogRecords
+LogRecordListener log) {
+    var engine = new DemoHierarchicalTestEngine (""first"");
+    TestDescriptor test1 = engine.addTest (""test1"", noOp);
+    LauncherDiscoveryRequest request = request ().selectors (selectUniqueId (test1.getUniqueId ())).filters (includeEngines (""second"")).build ();
+    var launcher = createLauncher (engine);
+    var exception = assertThrows (JUnitException.class, () -> launcher.discover (request));
+    assertThat (exception.getMessage ()).startsWith (""No TestEngine ID matched the following include EngineFilters: [second]."").contains (""Please fix/remove the filter or add the engine."").contains (""Registered TestEngines:\n- first ("").endsWith (""Registered EngineFilters:\n- EngineFilter that includes engines with IDs [second]"");
+    assertThat (log.stream (WARNING)).isEmpty ();
+}",2,Compliant,0.78,,2,Compliant,0.74,,1,Partial,0.55,The instantiated type appears to be a test engine; without broader context it's unclear whether this is a replaceable collaborator or a local test fixture.,5,needs_more_context
+systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/gui/UndoHistory.java:306-319,jmeter,systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/gui/UndoHistory.java,306,319,14,endUndoTransaction,"void endUndoTransaction () {
+    if (! isEnabled ()) {
+        return;
+    }
+    if (! isTransaction ()) {
+        log.error (""Undo transaction ended without beginning"", new Exception ());
+        return;
+    }
+    SimpleCompoundEdit edit = transactions.pop ();
+    edit.end ();
+    if (! edit.isEmpty ()) {
+        addEdit (edit);
+    }
+}",2,Compliant,0.72,,2,Compliant,0.7,,1,Partial,0.55,"No clear instantiation of external services, but replaceability of logger and SimpleCompoundEdit cannot be determined from this method alone.",5,needs_more_context
+systems/Projects/struts-main/core/src/test/java/org/apache/struts2/util/UnknownHandlerManagerTest.java:57-75,struts,systems/Projects/struts-main/core/src/test/java/org/apache/struts2/util/UnknownHandlerManagerTest.java,57,75,19,testEmptyStack,"public void testEmptyStack () throws ConfigurationException {
+    final String filename = ""org/apache/struts2/config/providers/xwork-unknownhandler-stack-empty.xml"";
+    ConfigurationProvider provider = buildConfigurationProvider (filename);
+    loadConfigurationProviders (provider);
+    configurationManager.reload ();
+    UnknownHandlerManager unknownHandlerManager = new DefaultUnknownHandlerManager ();
+    container.inject (unknownHandlerManager);
+    List < UnknownHandler > unknownHandlers = unknownHandlerManager.getUnknownHandlers ();
+    assertNotNull (unknownHandlers);
+    assertEquals (2, unknownHandlers.size ());
+    UnknownHandler uh1 = unknownHandlers.get (0);
+    UnknownHandler uh2 = unknownHandlers.get (1);
+    assertTrue (uh1 instanceof SomeUnknownHandler);
+    assertTrue (uh2 instanceof SomeUnknownHandler);
+}",2,Compliant,0.78,,2,Compliant,0.74,,0,Violated,0.8,,4,
+systems/Projects/struts-main/core/src/test/java/org/apache/struts2/dispatcher/TwoFilterIntegrationTest.java:152-180,struts,systems/Projects/struts-main/core/src/test/java/org/apache/struts2/dispatcher/TwoFilterIntegrationTest.java,152,180,29,run,"private MockHttpServletResponse run (String uri, Map < String, String > filterInitParams, final Filter...filters) throws ServletException, IOException {
+    final LinkedList < Filter > filterList = new LinkedList < > (Arrays.asList (filters));
+    MockHttpServletRequest request = new MockHttpServletRequest ();
+    MockHttpServletResponse response = new MockHttpServletResponse ();
+    MockFilterConfig filterConfig = new MockFilterConfig ();
+    MockFilterChain filterChain = new MockFilterChain () {
+        @Override
+        public void doFilter (ServletRequest req, ServletResponse res) {
+            Filter next = (filterList.size () > 0 ? filterList.removeFirst () : null);
+            if (next != null) {
+                try {
+                    next.doFilter (req, res, this);
+                } catch (IOException | ServletException e) {
+                    throw new RuntimeException (e);
+                }
+            }
+        }
+    }
+    ;
+    filterInitParams.forEach (filterConfig :: addInitParameter);
+    request.setRequestURI (uri);
+    for (Filter filter : filters) {
+        filter.init (filterConfig);
+    }
+    filterList.removeFirst ().doFilter (request, response, filterChain);
+    assertNull (ActionContext.getContext ());
+    assertNull (Dispatcher.getInstance ());
+    return response;
+}",1,Partial,0.55,"Method mixes setup/orchestration of a filter chain with post-conditions/assertions; in a test helper this may be acceptable, but cohesion depends on surrounding test design.",2,Compliant,0.75,No switch/else-if variant encoding; extension is primarily via providing different Filter implementations.,1,Partial,0.6,"In test code, concrete mocks and static access are common; method-level structure shows tight coupling to specific classes, but replaceability expectations are unclear.",4,needs_more_context
+systems/Projects/jmeter-master/src/protocol/http/src/main/java/org/apache/jmeter/protocol/http/gui/CookiePanel.java:261-265,jmeter,systems/Projects/jmeter-master/src/protocol/http/src/main/java/org/apache/jmeter/protocol/http/gui/CookiePanel.java,261,265,5,createTestElement,"public TestElement createTestElement () {
+    CookieManager cookieManager = new CookieManager ();
+    modifyTestElement (cookieManager);
+    return cookieManager;
+}",2,Compliant,0.78,"Method is a thin factory/orchestrator: instantiate, configure, return.",2,Compliant,0.72,"No method-level extensibility risk signals (e.g., switch/if chains, policy constants) are present.",0,Violated,0.7,Method is tightly coupled to the concrete CookieManager type; replacing the implementation would require modifying this method.,4,
+systems/Projects/jmeter-master/src/protocol/native/src/main/java/org/apache/jmeter/protocol/system/SystemSampler.java:207-209,jmeter,systems/Projects/jmeter-master/src/protocol/native/src/main/java/org/apache/jmeter/protocol/system/SystemSampler.java,207,209,3,getDirectory,"public String getDirectory () {
+    return getPropertyAsString (DIRECTORY, FileServer.getDefaultBase ());
+}",2,Compliant,0.78,,2,Compliant,0.7,,0,Violated,0.72,,4,
+systems/Projects/selenium-trunk/java/test/org/openqa/selenium/WebNetworkTest.java:351-405,selenium,systems/Projects/selenium-trunk/java/test/org/openqa/selenium/WebNetworkTest.java,351,405,55,canRemoveRequestHandler,"void canRemoveRequestHandler () throws InterruptedException {
+    Route route = Route.matching (req -> req.getUri ().contains (""network"")).to (() -> req -> {
+        HttpResponse response = new HttpResponse ();
+        req.getHeaderNames ().forEach (header -> {
+            String value = req.getHeader (header);
+            response.addHeader (header, value);
+        });
+        return response.setContent (utf8String (""Received response for network""));
+    });
+    appServer = new NettyAppServer (route);
+    appServer.start ();
+    Predicate < URI > filter = uri -> uri.getPath ().contains (""network"");
+    CountDownLatch latch = new CountDownLatch (1);
+    page = appServer.whereIs (""network.html"");
+    long id = ((RemoteWebDriver) driver).network ().addRequestHandler (filter, httpRequest -> new HttpRequest (HttpMethod.HEAD, page).addHeader (""test"", ""network-intercept""));
+    ((RemoteWebDriver) driver).network ().removeRequestHandler (id);
+    Network network = new Network (driver);
+    network.onResponseCompleted (responseDetails -> {
+        List < Header > headers = responseDetails.getResponseData ().getHeaders ();
+        headers.forEach (header -> {
+            if (header.getName ().equals (""test"")) {
+                assertThat (header.getValue ().getValue ()).isEqualTo (""network-intercept"");
+                latch.countDown ();
+            }
+        });
+    });
+    driver.get (page);
+    latch.await (5, TimeUnit.SECONDS);
+    assertThat (latch.getCount ()).isEqualTo (1);
+}",0,Violated,0.78,"Method mixes server setup, network interception configuration, event handling, and test assertions/synchronization.",1,Partial,0.55,"No multi-branch variant logic, but several embedded constants and inline behaviors suggest modifications would be needed for changes; unclear if this is intended as fixed test logic.",0,Violated,0.74,"Method constructs concrete infrastructure/collaborator types directly, increasing coupling and reducing replaceability at the method level.",1,
+systems/Projects/struts-main/plugins/json/src/main/java/org/apache/struts2/json/JSONPopulator.java:139-179,struts,systems/Projects/struts-main/plugins/json/src/main/java/org/apache/struts2/json/JSONPopulator.java,139,179,41,convertToArray,"private Object convertToArray (Class clazz, Type type, Object value, Method accessor) throws JSONException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException, IntrospectionException {
+    if (value == null) return null;
+    else if (value instanceof List) {
+        Class arrayType = clazz.getComponentType ();
+        List values = (List) value;
+        Object newArray = Array.newInstance (arrayType, values.size ());
+        for (int j = 0; j < values.size (); j ++) {
+            Object listValue = values.get (j);
+            if (arrayType.equals (Object.class)) {
+                Array.set (newArray, j, listValue);
+            }
+            else if (isJSONPrimitive (arrayType)) {
+                Array.set (newArray, j, this.convertPrimitive (arrayType, listValue, accessor));
+            }
+            else if (listValue instanceof Map) {
+                Object newObject;
+                if (Map.class.isAssignableFrom (arrayType)) {
+                    newObject = convertToMap (arrayType, type, listValue, accessor);
+                }
+                else if (List.class.isAssignableFrom (arrayType)) {
+                    newObject = convertToCollection (arrayType, type, listValue, accessor);
+                }
+                else {
+                    newObject = arrayType.newInstance ();
+                    this.populateObject (newObject, (Map) listValue);
+                }
+                Array.set (newArray, j, newObject);
+            }
+            else throw new JSONException (""Incompatible types for property "" + accessor.getName ());
+        }
+        return newArray;
+    }
+    else throw new JSONException (""Incompatible types for property "" + accessor.getName ());
+}",1,Partial,0.55,Method mixes iteration/array building with multiple conversion paths and object population; could still be considered one responsibility (convert list to array) but cohesion depends on surrounding design.,0,Violated,0.8,"Branching appears to represent type-based conversion variants, increasing modification risk for new cases.",1,Partial,0.6,The only 'new' is reflective instantiation of an unknown type; without class-level context it's unclear whether this creates replaceable collaborators or just data objects.,2,needs_more_context
+systems/Projects/struts-main/plugins/config-browser/src/main/java/org/apache/struts2/config_browser/ShowConstantsAction.java:35-41,struts,systems/Projects/struts-main/plugins/config-browser/src/main/java/org/apache/struts2/config_browser/ShowConstantsAction.java,35,41,7,setContainer,"public void setContainer (Container container) {
+    super.setContainer (container);
+    constants = new HashMap < String, String > ();
+    for (String key : container.getInstanceNames (String.class)) {
+        constants.put (key, container.getInstance (String.class, key));
+    }
+}",1,Partial,0.55,Method mixes setting a dependency with deriving/populating a map from it; whether this is a single cohesive responsibility depends on the class role.,2,Compliant,0.75,Method does not hard-code multiple behavioral variants; changes are more likely in collaborators than in this method.,2,Compliant,0.8,No direct instantiation of external services/clients; uses injected Container and JDK collection.,5,needs_more_context
+systems/Projects/struts-main/core/src/test/java/org/apache/struts2/text/StrutsLocalizedTextProviderTest.java:551-560,struts,systems/Projects/struts-main/core/src/test/java/org/apache/struts2/text/StrutsLocalizedTextProviderTest.java,551,560,10,setUp,"protected void setUp () throws Exception {
+    super.setUp ();
+    XmlConfigurationProvider provider = new StrutsXmlConfigurationProvider (""xwork-sample.xml"");
+    container.inject (provider);
+    loadConfigurationProviders (provider);
+    localizedTextProvider = container.getInstance (LocalizedTextProvider.class);
+    ActionContext.getContext ().withLocale (Locale.US);
+}",1,Partial,0.55,"As a test lifecycle setUp method, multiple initialization actions may still be cohesive, but cohesion depends on the test class role and conventions.",1,Partial,0.5,"No branching/variant encoding is present, but changeable setup parameters are embedded; whether this is an extensibility concern depends on surrounding test design.",0,Violated,0.75,Method introduces concrete and static dependencies rather than relying solely on injected abstractions.,2,needs_more_context
+systems/Projects/junit5-main/junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptor.java:35-37,junit5,systems/Projects/junit5-main/junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/StreamInterceptor.java,35,37,3,registerStdout,"static Optional < StreamInterceptor > registerStdout (int maxNumberOfBytesPerThread) {
+    return register (System.out, System :: setOut, maxNumberOfBytesPerThread);
+}",2,Compliant,0.9,,2,Compliant,0.85,,1,Partial,0.55,Use of System streams suggests tight coupling to JVM globals; whether this is acceptable depends on surrounding design and testability requirements.,5,
+systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/convert/CoerceFloatToStringTest.java:90-101,jackson-databind,systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/convert/CoerceFloatToStringTest.java,90,101,12,assertSuccessfulFloatToStringCoercionWith,"private void assertSuccessfulFloatToStringCoercionWith (ObjectMapper objectMapper) throws JsonProcessingException {
+    assertEquals (""3.0"", objectMapper.readValue (""3.0"", String.class));
+    assertEquals (""-2.0"", objectMapper.readValue (""-2.0"", String.class));
+    {
+        StringWrapper w = objectMapper.readValue (""{\""str\"": -5.0}"", StringWrapper.class);
+        assertEquals (""-5.0"", w.str);
+        String [] arr = objectMapper.readValue (""[ 2.0 ]"", String [].class);
+        assertEquals (""2.0"", arr [0]);
+    }
+}",2,Compliant,0.78,,2,Compliant,0.7,,2,Compliant,0.74,,6,
+systems/Projects/selenium-trunk/java/src/org/openqa/selenium/bidi/browsingcontext/BrowsingContext.java:226-230,selenium,systems/Projects/selenium-trunk/java/src/org/openqa/selenium/bidi/browsingcontext/BrowsingContext.java,226,230,5,handleUserPrompt,"public void handleUserPrompt (boolean accept, String userText) {
+    this.bidi.send (new Command < > (HANDLE_USER_PROMPT, Map.of (CONTEXT, id, ""accept"", accept, ""userText"", userText)));
+}",2,Compliant,0.9,,2,Compliant,0.85,,1,Partial,0.55,Cannot determine from this method alone whether Command is a simple value/DTO or a replaceable collaborator; also cannot see whether bidi is an abstraction or concrete type.,5,needs_more_context
+systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertyBuilder.java:1280-1320,jackson-databind,systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertyBuilder.java,1280,1320,41,_explode,"private void _explode (Collection < PropertyName > newNames, Map < PropertyName, POJOPropertyBuilder > props, Linked < ? > accessors) {
+    final Linked < ? > firstAcc = accessors;
+    for (Linked < ? > node = accessors; node != null; node = node.next) {
+        PropertyName name = node.name;
+        if (! node.isNameExplicit || name == null) {
+            if (! node.isVisible) {
+                continue;
+            }
+            throw new IllegalStateException (""Conflicting/ambiguous property name definitions (implicit name "" + ClassUtil.name (_name) + ""): found multiple explicit names: "" + newNames + "", but also implicit accessor: "" + node);
+        }
+        POJOPropertyBuilder prop = props.get (name);
+        if (prop == null) {
+            prop = new POJOPropertyBuilder (_config, _annotationIntrospector, _forSerialization, _internalName, name);
+            props.put (name, prop);
+        }
+        if (firstAcc == _fields) {
+            Linked < AnnotatedField > n2 = (Linked < AnnotatedField >) node;
+            prop._fields = n2.withNext (prop._fields);
+        }
+        else if (firstAcc == _getters) {
+            Linked < AnnotatedMethod > n2 = (Linked < AnnotatedMethod >) node;
+            prop._getters = n2.withNext (prop._getters);
+        }
+        else if (firstAcc == _setters) {
+            Linked < AnnotatedMethod > n2 = (Linked < AnnotatedMethod >) node;
+            prop._setters = n2.withNext (prop._setters);
+        }
+        else if (firstAcc == _ctorParameters) {
+            Linked < AnnotatedParameter > n2 = (Linked < AnnotatedParameter >) node;
+            prop._ctorParameters = n2.withNext (prop._ctorParameters);
+        }
+        else {
+            throw new IllegalStateException (""Internal error: mismatched accessors, property: "" + this);
+        }
+    }
+}",1,Partial,0.55,"Cohesion depends on whether this method's sole role in the class is to redistribute accessors into per-name properties; without class-level context, SRP is uncertain.",0,Violated,0.8,Adding a new accessor kind would require editing this method to add another branch and assignment target.,1,Partial,0.6,"Without broader context, it's unclear whether POJOPropertyBuilder is a replaceable service/collaborator or simply an internal data structure; static utility usage is minor but still a concrete dependency.",2,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/files/PublisherTest.java:72-79,fitnesse,systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/files/PublisherTest.java,72,79,8,skipSpecialPages,"public void skipSpecialPages () {
+    WikiPageUtil.addPage (root, PathParser.parse (""PageHeader""), ""header"");
+    WikiPageUtil.addPage (root, PathParser.parse (""PageFooter""), ""footer"");
+    WikiPageUtil.addPage (root, PathParser.parse (""files""), ""files"");
+    Publisher publisher = new Publisher (TEMPLATE, ""out"", root.getPageCrawler (), this :: writer);
+    publisher.traverse (root);
+    Assert.assertEquals (""out/root.html"", paths);
+}",0,Violated,0.75,"Method combines arranging test data, invoking traversal, and asserting results (multiple responsibilities within the method).",2,Compliant,0.7,"No structural variation points (e.g., branch chains or policy constants) are encoded in this method.",0,Violated,0.8,Method constructs and directly uses concrete types/utilities rather than depending on abstractions.,2,
+systems/Projects/selenium-trunk/java/test/org/openqa/selenium/grid/data/NodeStatusTest.java:114-149,selenium,systems/Projects/selenium-trunk/java/test/org/openqa/selenium/grid/data/NodeStatusTest.java,114,149,36,withSessionTimeoutInJsonStatus,"void withSessionTimeoutInJsonStatus () throws URISyntaxException {
+    String source = ""{\n"" + ""      \""availability\"": \""UP\"",\n"" + ""      \""externalUri\"": \""http:\\u002f\\u002f192.168.1.101:5555\"",\n"" + ""      \""heartbeatPeriod\"": 60000,\n"" + ""      \""maxSessions\"": 1,\n"" + ""      \""sessionTimeout\"": 600000,\n"" + ""      \""nodeId\"": \""d136dd9b-6497-4049-9371-42f89b14ea2b\"",\n"" + ""      \""osInfo\"": {\n"" + ""        \""arch\"": \""aarch64\"",\n"" + ""        \""name\"": \""Mac OS X\"",\n"" + ""        \""version\"": \""15.3\""\n"" + ""      },\n"" + ""      \""slots\"": [\n"" + ""        {\n"" + ""          \""id\"": {\n"" + ""            \""hostId\"": \""d136dd9b-6497-4049-9371-42f89b14ea2b\"",\n"" + ""            \""id\"": \""965e8cb4-7b48-4638-8bc8-6889c6319682\""\n"" + ""          },\n"" + ""          \""lastStarted\"": \""1970-01-01T00:00:00Z\"",\n"" + ""          \""session\"": null,\n"" + ""          \""stereotype\"": {\n"" + ""            \""browserName\"": \""chrome\"",\n"" + ""            \""platformName\"": \""mac\""\n"" + ""          }\n"" + ""        }\n"" + ""      ],\n"" + ""      \""version\"": \""4.17.0 (revision unknown*)\""\n"" + ""    }"";
+    Json json = new Json ();
+    NodeStatus nodeStatus = json.toType (source, NodeStatus.class);
+    assertThat (nodeStatus.getSessionTimeout ()).isEqualTo (Duration.ofSeconds (600));
+}",2,Compliant,0.78,,2,Compliant,0.72,,1,Partial,0.55,"The 'Json' type may be a simple utility/value-like object or a replaceable service; without broader context, coupling impact is uncertain.",5,needs_more_context
+systems/Projects/commons-lang-master/src/main/java/org/apache/commons/lang3/text/StrSubstitutor.java:793-803,commons-lang,systems/Projects/commons-lang-master/src/main/java/org/apache/commons/lang3/text/StrSubstitutor.java,793,803,11,replaceIn,"public boolean replaceIn (final StringBuffer source, final int offset, final int length) {
+    if (source == null) {
+        return false;
+    }
+    final StrBuilder buf = new StrBuilder (length).append (source, offset, length);
+    if (! substitute (buf, 0, length)) {
+        return false;
+    }
+    source.replace (offset, offset + length, buf.toString ());
+    return true;
+}",2,Compliant,0.78,,2,Compliant,0.7,,1,Partial,0.55,needs_more_context,5,needs_more_context
+systems/Projects/junit5-main/platform-tests/src/test/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionIntegrationTests.java:817-820,junit5,systems/Projects/junit5-main/platform-tests/src/test/java/org/junit/platform/engine/support/hierarchical/ParallelExecutionIntegrationTests.java,817,820,4,secondTest,"void secondTest () {
+    assertTrue (B.tryLock ());
+    assertTrue (A.tryLock ());
+}",2,Compliant,0.78,,2,Compliant,0.72,,2,Compliant,0.7,,6,
+systems/Projects/junit5-main/jupiter-tests/src/test/java/org/junit/jupiter/api/AssertThrowsExactlyAssertionsTests.java:265-279,junit5,systems/Projects/junit5-main/jupiter-tests/src/test/java/org/junit/jupiter/api/AssertThrowsExactlyAssertionsTests.java,265,279,15,assertThrowsWithExecutableThatThrowsInstanceOfStaticNestedClassAsUnexpectedException,"void assertThrowsWithExecutableThatThrowsInstanceOfStaticNestedClassAsUnexpectedException () {
+    try {
+        assertThrowsExactly (IllegalStateException.class, () -> {
+            throw new LocalException ();
+        });
+        expectAssertionFailedError ();
+    } catch (AssertionFailedError ex) {
+        assertMessageStartsWith (ex, ""Unexpected exception type thrown, "");
+        assertMessageContains (ex, ""expected: <java.lang.IllegalStateException>"");
+        assertMessageContains (ex, ""but was: <"" + LocalException.class.getName ().replace (""$"", ""."") + "">"");
+        assertThat (ex).hasCauseExactlyInstanceOf (LocalException.class);
+    }
+}",2,Compliant,0.78,,2,Compliant,0.7,,1,Partial,0.55,needs_more_context,5,needs_more_context
+systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/introspect/AccessorNamingStrategyTest.java:217-249,jackson-databind,systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/introspect/AccessorNamingStrategyTest.java,217,249,33,testFirstLetterConfigs,"public void testFirstLetterConfigs () throws Exception {
+    final FirstLetterVariesBean input = new FirstLetterVariesBean ();
+    final String STD_EXP = a2q (""{'4Roses':42,'land':true,'value':31337}"");
+    ObjectMapper mapper = newJsonMapper ();
+    assertEquals (STD_EXP, mapper.writeValueAsString (input));
+    mapper = JsonMapper.builder ().accessorNaming (new DefaultAccessorNamingStrategy.Provider ().withFirstCharAcceptance (true, true)).build ();
+    assertEquals (STD_EXP, mapper.writeValueAsString (input));
+    mapper = JsonMapper.builder ().accessorNaming (new DefaultAccessorNamingStrategy.Provider ().withFirstCharAcceptance (true, false)).build ();
+    assertEquals (a2q (""{'land':true,'value':31337}""), mapper.writeValueAsString (input));
+    mapper = JsonMapper.builder ().accessorNaming (new DefaultAccessorNamingStrategy.Provider ().withFirstCharAcceptance (false, true)).build ();
+    assertEquals (a2q (""{'4Roses':42,'value':31337}""), mapper.writeValueAsString (input));
+}",2,Compliant,0.78,Method is a cohesive unit test verifying serialization output under several configurations.,1,Partial,0.55,"As a test, modification-on-change is expected; method-level structure still encodes several variants via hard-coded cases.",1,Partial,0.6,"In a test method, direct construction is common; without more context it's unclear whether these are replaceable collaborators or just value/configuration objects.",4,needs_more_context
+systems/Projects/selenium-trunk/java/src/org/openqa/selenium/remote/http/RetryRequest.java:39-80,selenium,systems/Projects/selenium-trunk/java/src/org/openqa/selenium/remote/http/RetryRequest.java,39,80,42,apply,"public HttpHandler apply (HttpHandler next) {
+    return req -> {
+        for (int i = 0; i < NEEDED_ATTEMPTS; i ++) {
+            HttpResponse response;
+            try {
+                response = next.execute (req);
+            } catch (RuntimeException ex) {
+                boolean isConnectionFailure = ex.getCause () instanceof ConnectException;
+                if (isConnectionFailure && i < RETRIES_ON_CONNECTION_FAILURE) {
+                    LOG.log (LOG_LEVEL, ""Retry #"" + (i + 1) + "" on ConnectException"", ex);
+                    continue;
+                }
+                throw ex;
+            }
+            boolean isServerError = (response.getStatus () == HTTP_INTERNAL_ERROR && response.getContent ().length () == 0) || response.getStatus () == HTTP_UNAVAILABLE;
+            if (isServerError && i < RETRIES_ON_SERVER_ERROR) {
+                LOG.log (LOG_LEVEL, ""Retry #"" + (i + 1) + "" on ServerError: "" + response.getStatus ());
+                continue;
+            }
+            return response;
+        }
+        throw new IllegalStateException (""Effective unreachable code reached, check constants."");
+    };
+}",2,Compliant,0.78,,0,Violated,0.8,,2,Compliant,0.72,,4,
+systems/Projects/junit5-main/jupiter-tests/src/test/java/org/junit/jupiter/engine/TestTemplateInvocationTests.java:694-720,junit5,systems/Projects/junit5-main/jupiter-tests/src/test/java/org/junit/jupiter/engine/TestTemplateInvocationTests.java,694,720,27,createContext,"private TestTemplateInvocationContext createContext (String argument) {
+    return new TestTemplateInvocationContext () {
+        @Override
+        public String getDisplayName (int invocationIndex) {
+            return TestTemplateInvocationContext.super.getDisplayName (invocationIndex) + "" "" + argument;
+        }@Override
+        public List < Extension > getAdditionalExtensions () {
+            return singletonList (new ParameterResolver () {
+                @Override
+                public boolean supportsParameter (ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+                    return true;
+                }@Override
+                public Object resolveParameter (ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+                    return argument;
+                }
+            }
+            );
+        }
+    }
+    ;
+}",2,Compliant,0.72,,2,Compliant,0.7,,1,Partial,0.55,Instantiation is of interfaces via anonymous classes; whether these are considered replaceable external collaborators vs test-local helpers is context-dependent.,5,needs_more_context
+systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/util/BeanUtil.java:47-73,jackson-databind,systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/util/BeanUtil.java,47,73,27,okNameForRegularGetter,"public static String okNameForRegularGetter (AnnotatedMethod am, String name, boolean stdNaming) {
+    if (name.startsWith (""get"")) {
+        if (""getCallbacks"".equals (name)) {
+            if (isCglibGetCallbacks (am)) {
+                return null;
+            }
+        }
+        else if (""getMetaClass"".equals (name)) {
+            if (isGroovyMetaClassGetter (am)) {
+                return null;
+            }
+        }
+        return stdNaming ? stdManglePropertyName (name, 3) : legacyManglePropertyName (name, 3);
+    }
+    return null;
+}",2,Compliant,0.78,,1,Partial,0.62,needs_more_context,2,Compliant,0.9,,5,needs_more_context
+systems/Projects/selenium-trunk/java/test/org/openqa/selenium/support/ui/FluentWaitTest.java:244-265,selenium,systems/Projects/selenium-trunk/java/test/org/openqa/selenium/support/ui/FluentWaitTest.java,244,265,22,callsDeprecatedHandlerForRuntimeExceptions,"void callsDeprecatedHandlerForRuntimeExceptions () {
+    final TimeoutException exception = new TimeoutException ();
+    when (mockClock.instant ()).thenReturn (EPOCH, EPOCH.plusMillis (2500));
+    when (mockCondition.apply (mockDriver)).thenThrow (exception);
+    final TestException sentinelException = new TestException ();
+    FluentWait < WebDriver > wait = new FluentWait < WebDriver > (mockDriver, mockClock, mockSleeper) {
+        @Override
+        protected RuntimeException timeoutException (String message, Throwable lastException) {
+            throw sentinelException;
+        }
+    }
+    ;
+    wait.withTimeout (Duration.ofMillis (0)).pollingEvery (Duration.ofSeconds (2)).ignoring (TimeoutException.class);
+    assertThatExceptionOfType (TestException.class).isThrownBy (() -> wait.until (mockCondition)).satisfies (expected -> assertThat (sentinelException).isSameAs (expected));
+}",2,Compliant,0.78,,2,Compliant,0.74,,1,Partial,0.55,needs_more_context,5,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/test/fitnesse/wikitext/parser/TodayTest.java:24-27,fitnesse,systems/Projects/SolidLeaning/fitnesse/test/fitnesse/wikitext/parser/TodayTest.java,24,27,4,tearDown,"public void tearDown () {
+    Clock.restoreDefaultClock ();
+    Locale.setDefault (originalLocale);
+}",2,Compliant,0.72,,2,Compliant,0.66,,0,Violated,0.74,"Method is tightly coupled to static/global APIs, reducing replaceability in tests or alternate implementations.",4,
+systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/util/JsseSSLManager.java:98-120,jmeter,systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/util/JsseSSLManager.java,98,120,23,JsseSSLManager,"public JsseSSLManager (Provider provider) {
+    log.debug (""ssl Provider = {}"", provider);
+    setProvider (provider);
+    if (null == this.rand) {
+        this.rand = new SecureRandom ();
+    }
+    try {
+        if (SHARED_SESSION_CONTEXT) {
+            log.debug (""Creating shared context"");
+            this.defaultContext = createContext ();
+        }
+        else {
+            this.threadlocal = new ThreadLocal < > ();
+        }
+        HttpsURLConnection.setDefaultSSLSocketFactory (new HttpSSLProtocolSocketFactory (CPS));
+        HttpsURLConnection.setDefaultHostnameVerifier ((hostname, session) -> true);
+        log.debug (""SSL stuff all set"");
+    } catch (GeneralSecurityException ex) {
+        log.error (""Could not set up SSLContext"", ex);
+    }
+    log.debug (""JsseSSLManager installed"");
+}",0,Violated,0.78,"Constructor mixes internal initialization, conditional context strategy selection, and global HTTPS defaults configuration.",1,Partial,0.55,"Only one branch, but it selects between two setup paths and hard-codes a verifier; unclear if this is intended to be extensible without modifying this method.",0,Violated,0.8,"Method constructs concrete collaborators and configures global HTTPS defaults via static calls, reducing replaceability.",1,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/test/fitnesse/slim/SlimServiceTestBase.java:33-51,fitnesse,systems/Projects/SolidLeaning/fitnesse/test/fitnesse/slim/SlimServiceTestBase.java,33,51,19,startWithFactoryAsync,"public static synchronized void startWithFactoryAsync (final SlimFactory slimFactory, final SlimService.Options options) throws IOException {
+    if (service != null && service.isAlive ()) {
+        service.interrupt ();
+        throw new SlimError (""Already an in-process server running: "" + service.getName () + "" (alive="" + service.isAlive () + "")"");
+    }
+    ServerSocketFactory serverSocketFactory = options.useSSL ? new SslServerSocketFactory (true, SslParameters.createSslParameters (options.sslParameterClassName)) : new PlainServerSocketFactory ();
+    final SlimService slimservice = new SlimService (slimFactory.getSlimServer (), serverSocketFactory.createServerSocket (options.port), options.daemon);
+    service = new Thread () {
+        @Override
+        public void run () {
+            try {
+                slimservice.accept ();
+            } catch (IOException e) {
+                throw new SlimError (e);
+            }
+        }
+    }
+    ;
+    service.start ();
+}",1,Partial,0.55,"Method mixes validation/guarding, object construction, and asynchronous thread startup; could be seen as one orchestration responsibility but cohesion depends on surrounding class role.",1,Partial,0.6,"Only one main branch, but it selects between concrete implementations; future socket types/policies would likely require modifying this method.",0,Violated,0.85,"Method constructs concrete collaborators and manages a static thread field, reducing replaceability and inversion of control.",2,needs_more_context
+systems/Projects/struts-main/core/src/main/java/org/apache/struts2/inject/util/ReferenceCache.java:199-203,struts,systems/Projects/struts-main/core/src/main/java/org/apache/struts2/inject/util/ReferenceCache.java,199,203,5,readObject,"private void readObject (ObjectInputStream in) throws IOException, ClassNotFoundException {
+    in.defaultReadObject ();
+    this.futures = new ConcurrentHashMap < > ();
+    this.localFuture = new ThreadLocal < > ();
+}",2,Compliant,0.78,,2,Compliant,0.74,,2,Compliant,0.7,,6,
+systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/deser/creators/NullValueViaCreatorTest.java:49-56,jackson-databind,systems/Projects/jackson-databind-2.19/src/test/java/com/fasterxml/jackson/databind/deser/creators/NullValueViaCreatorTest.java,49,56,8,findBeanDeserializer,"public JsonDeserializer < ? > findBeanDeserializer (JavaType type, DeserializationConfig config, BeanDescription beanDesc) {
+    if (! Contained.class.isAssignableFrom (type.getRawClass ())) {
+        return null;
+    }
+    return new ContainedDeserializer ();
+}",2,Compliant,0.78,,2,Compliant,0.7,,0,Violated,0.74,Method is tightly coupled to a specific deserializer implementation via direct construction.,4,
+systems/Projects/selenium-trunk/java/test/org/openqa/selenium/bidi/input/DefaultMouseTest.java:330-344,selenium,systems/Projects/selenium-trunk/java/test/org/openqa/selenium/bidi/input/DefaultMouseTest.java,330,344,15,testMovingMouseToRelativeElementOffset,"public void testMovingMouseToRelativeElementOffset () {
+    driver.get (pages.mouseTrackerPage);
+    WebElement trackerDiv = driver.findElement (By.id (""mousetracker""));
+    Dimension size = trackerDiv.getSize ();
+    inputModule.perform (windowHandle, getBuilder (driver).moveToElement (trackerDiv, 95 - size.getWidth () / 2, 195 - size.getHeight () / 2).getSequences ());
+    WebElement reporter = driver.findElement (By.id (""status""));
+    wait.until (fuzzyMatchingOfCoordinates (reporter, 95, 195));
+}",1,Partial,0.55,"As a test method, this may be a single cohesive scenario, but that role is not provable from the method alone.",0,Violated,0.75,No extensibility mechanism is visible for varying the target/expected coordinates without editing the method.,2,Compliant,0.7,Method does not introduce new concrete service dependencies via 'new' or static singletons.,3,needs_more_context
+systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/node/FloatNode.java:95-97,jackson-databind,systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/node/FloatNode.java,95,97,3,bigIntegerValue,"public BigInteger bigIntegerValue () {
+    return decimalValue ().toBigInteger ();
+}",2,Compliant,0.9,,2,Compliant,0.85,,2,Compliant,0.9,,6,
+systems/Projects/selenium-trunk/java/src/org/openqa/selenium/interactions/Actions.java:457-460,selenium,systems/Projects/selenium-trunk/java/src/org/openqa/selenium/interactions/Actions.java,457,460,4,pause,"public Actions pause (Duration duration) {
+    Require.nonNegative (""Duration of pause"", duration);
+    return tick (new Pause (getActivePointer (), duration));
+}",2,Compliant,0.78,,2,Compliant,0.74,,1,Partial,0.55,needs_more_context,5,needs_more_context
+systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/bytecode/enhance/internal/bytebuddy/FieldAccessEnhancer.java:51-118,hibernate-orm,systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/bytecode/enhance/internal/bytebuddy/FieldAccessEnhancer.java,51,118,68,wrap,"public MethodVisitor wrap (TypeDescription instrumentedType, MethodDescription instrumentedMethod, MethodVisitor methodVisitor, Implementation.Context implementationContext, TypePool typePool, int writerFlags, int readerFlags) {
+    return new MethodVisitor (OpenedClassReader.ASM_API, methodVisitor) {
+        @Override
+        public void visitFieldInsn (int opcode, String owner, String name, String desc) {
+            if (opcode != Opcodes.GETFIELD && opcode != Opcodes.PUTFIELD) {
+                super.visitFieldInsn (opcode, owner, name, desc);
+                return;
+            }
+            TypeDescription declaredOwnerType = findDeclaredType (owner);
+            AnnotatedFieldDescription field = findField (declaredOwnerType, name, desc);
+            enhancementContext.discoverCompositeTypes (declaredOwnerType, typePool);
+            if ((enhancementContext.isEntityClass (declaredOwnerType.asErasure ()) || enhancementContext.isCompositeClass (declaredOwnerType.asErasure ())) && ! field.getType ().asErasure ().equals (managedCtClass) && enhancementContext.isPersistentField (field) && ! field.hasAnnotation (Id.class) && ! field.getName ().equals (""this$0"")) {
+                log.debugf (""Extended enhancement: Transforming access to field [%s#%s] from method [%s#%s()]"", declaredOwnerType.getName (), field.getName (), instrumentedType.getName (), instrumentedMethod.getName ());
+                switch (opcode) {
+                    case Opcodes.GETFIELD :
+                        methodVisitor.visitMethodInsn (Opcodes.INVOKEVIRTUAL, owner, EnhancerConstants.PERSISTENT_FIELD_READER_PREFIX + name, Type.getMethodDescriptor (Type.getType (desc)), false);
+                        return;
+                    case Opcodes.PUTFIELD :
+                        if (field.getFieldDescription ().isFinal ()) {
+                            break;
+                        }
+                        methodVisitor.visitMethodInsn (Opcodes.INVOKEVIRTUAL, owner, EnhancerConstants.PERSISTENT_FIELD_WRITER_PREFIX + name, Type.getMethodDescriptor (Type.getType (void.class), Type.getType (desc)), false);
+                        return;
+                    default :
+                        throw new EnhancementException (""Unexpected opcode: "" + opcode);
+                }
+            }
+            super.visitFieldInsn (opcode, owner, name, desc);
+        }
+    }
+    ;
+}",1,Partial,0.55,Method mixes wrapper construction with non-trivial bytecode-instruction handling logic; cohesion depends on the class role (enhancer) not fully visible here.,1,Partial,0.6,"Only two main opcode variants are handled, but the in-method policy/criteria and explicit switch suggest future variants/criteria changes may require modifying this method; cannot confirm if extension points exist elsewhere.",2,Compliant,0.75,The method does not directly new-up replaceable infrastructure collaborators; dependencies appear to be supplied via parameters/fields.,4,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/test/fitnesse/wiki/fs/DiskFileSystemTest.java:24-34,fitnesse,systems/Projects/SolidLeaning/fitnesse/test/fitnesse/wiki/fs/DiskFileSystemTest.java,24,34,11,findFilesAndFolders,"public void findFilesAndFolders () throws IOException {
+    new File (rootDir, ""DirName"").createNewFile ();
+    new File (rootDir, ""filename"").createNewFile ();
+    new File (rootDir, ""CVS"").createNewFile ();
+    List < String > listing = Arrays.asList (new DiskFileSystem ().list (rootDir));
+    assertEquals (listing.toString (), 2, listing.size ());
+    assertTrue (""no DirName found"", listing.contains (""DirName""));
+    assertTrue (""no filename found"", listing.contains (""filename""));
+}",0,Violated,0.75,,2,Compliant,0.7,,0,Violated,0.85,,2,
+systems/Projects/struts-main/core/src/main/java/org/apache/struts2/dispatcher/DefaultDispatcherErrorHandler.java:108-135,struts,systems/Projects/struts-main/core/src/main/java/org/apache/struts2/dispatcher/DefaultDispatcherErrorHandler.java,108,135,28,handleErrorInDevMode,"protected void handleErrorInDevMode (HttpServletResponse response, int code, Exception e) {
+    LOG.debug (""Exception occurred during processing request: {}"", e.getMessage (), e);
+    try {
+        List < Throwable > chain = new ArrayList < > ();
+        Throwable cur = e;
+        do {
+            chain.add (cur);
+        }
+        while ((cur = cur.getCause ()) != null);
+        Writer writer = new StringWriter ();
+        template.process (createReportData (e, chain), writer);
+        response.setContentType (""text/html"");
+        response.getWriter ().write (writer.toString ());
+        response.getWriter ().close ();
+    } catch (Exception exp) {
+        try {
+            LOG.debug (""Cannot show problem report!"", exp);
+            response.sendError (code, ""Unable to show problem report:\n"" + exp + ""\n\n"" + LocationUtils.getLocation (exp));
+        } catch (IOException ex) {
+            LOG.warn (""Unable to send error response, code: {};"", code, ex);
+        } catch (IllegalStateException ise) {
+            LOG.warn (""Unable to send error response, code: {}; isCommited: {};"", code, response.isCommitted (), ise);
+        }
+    }
+}",0,Violated,0.72,"Method mixes diagnostics/logging, report data construction, template rendering, and HTTP response writing/fallback handling.",1,Partial,0.55,"Some behavior is delegated, but changes to error-report format/transport or exception handling policy may require modifying this method; unclear if this is intended as a stable extension point.",2,Compliant,0.78,Method does not construct replaceable collaborators; dependencies are passed in (HttpServletResponse) or referenced as existing fields/utilities.,3,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/run/SuiteResponderTest.java:533-550,fitnesse,systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/run/SuiteResponderTest.java,533,550,18,normalSuiteRunProducesIndivualTestHistoryFile,"public void normalSuiteRunProducesIndivualTestHistoryFile () throws Exception {
+    TestSummary counts = new TestSummary (1, 0, 0, 0);
+    String resultsFileName = String.format (""%s/SuitePage.SlimTest/20081205141900_%d_%d_%d_%d.xml"", context.getTestHistoryDirectory (), counts.getRight (), counts.getWrong (), counts.getIgnores (), counts.getExceptions ());
+    File xmlResultsFile = new File (resultsFileName);
+    if (xmlResultsFile.exists ()) xmlResultsFile.delete ();
+    addTestToSuite (""SlimTest"", simpleSlimDecisionTable);
+    runSuite ();
+    assertTrue (resultsFileName, xmlResultsFile.exists ());
+    FileInputStream xmlResultsStream = new FileInputStream (xmlResultsFile);
+    XmlUtil.newDocument (xmlResultsStream);
+    xmlResultsStream.close ();
+    xmlResultsFile.delete ();
+}",0,Violated,0.85,"Method combines multiple concerns (construct expected path, manage file lifecycle, run suite, assert, parse XML).",1,Partial,0.55,"No multi-branch variant logic, but hard-coded formatting/policy suggests modification risk if output naming changes.",0,Violated,0.8,Method is tightly coupled to java.io filesystem/stream implementations rather than abstractions.,1,
+systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/engine/internal/ImmutableEntityEntry.java:107-127,hibernate-orm,systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/engine/internal/ImmutableEntityEntry.java,107,127,21,deserialize,"public static EntityEntry deserialize (ObjectInputStream ois, PersistenceContext persistenceContext) throws IOException, ClassNotFoundException {
+    String previousStatusString;
+    return new ImmutableEntityEntry (persistenceContext.getSession ().getFactory (), (String) ois.readObject (), ois.readObject (), Status.valueOf ((String) ois.readObject ()), (previousStatusString = (String) ois.readObject ()).length () == 0 ? null : Status.valueOf (previousStatusString), (Object []) ois.readObject (), (Object []) ois.readObject (), ois.readObject (), LockMode.valueOf ((String) ois.readObject ()), ois.readBoolean (), ois.readBoolean (), null);
+}",2,Compliant,0.72,,2,Compliant,0.66,,1,Partial,0.55,Instantiation is of a domain type; without broader context it's unclear whether this represents a replaceable dependency or simply object reconstruction.,5,needs_more_context
+systems/Projects/struts-main/plugins/tiles/src/test/java/org/apache/tiles/el/ELAttributeEvaluatorTest.java:103-135,struts,systems/Projects/struts-main/plugins/tiles/src/test/java/org/apache/tiles/el/ELAttributeEvaluatorTest.java,103,135,33,testEvaluate,"public void testEvaluate () {
+    Attribute attribute = new Attribute ();
+    attribute.setExpressionObject (new Expression (""${requestScope.object1}""));
+    assertEquals (""The value is not correct"", ""value"", evaluator.evaluate (attribute, request));
+    attribute.setExpressionObject (new Expression (""${sessionScope.object2}""));
+    assertEquals (""The value is not correct"", 1, evaluator.evaluate (attribute, request));
+    attribute.setExpressionObject (new Expression (""${applicationScope.object3}""));
+    assertEquals (""The value is not correct"", 2.0F, evaluator.evaluate (attribute, request));
+    attribute.setExpressionObject (new Expression (""${object1}""));
+    assertEquals (""The value is not correct"", ""value"", evaluator.evaluate (attribute, request));
+    attribute.setExpressionObject (new Expression (""${object2}""));
+    assertEquals (""The value is not correct"", 1, evaluator.evaluate (attribute, request));
+    attribute.setExpressionObject (new Expression (""${object3}""));
+    assertEquals (""The value is not correct"", 2.0F, evaluator.evaluate (attribute, request));
+    attribute.setExpressionObject (new Expression (""${paulaBean.paula}""));
+    assertEquals (""The value is not correct"", ""Brillant"", evaluator.evaluate (attribute, request));
+    attribute.setExpressionObject (new Expression (""String literal""));
+    assertEquals (""The value is not correct"", ""String literal"", evaluator.evaluate (attribute, request));
+    attribute.setValue (2);
+    assertEquals (""The value is not correct"", 2, evaluator.evaluate (attribute, request));
+    attribute.setValue (""${object1}"");
+    assertEquals (""The value has been evaluated"", ""${object1}"", evaluator.evaluate (attribute, request));
+}",2,Compliant,0.85,,2,Compliant,0.75,,1,Partial,0.55,"Instantiation may be acceptable for DTO/value types in tests, but method-level context cannot confirm whether Attribute/Expression are purely value objects.",5,needs_more_context
+systems/Projects/jmeter-master/src/jorphan/src/main/java/org/apache/jorphan/gui/MenuScroller.java:585-598,jmeter,systems/Projects/jmeter-master/src/jorphan/src/main/java/org/apache/jorphan/gui/MenuScroller.java,585,598,14,setMenuItems,"private void setMenuItems () {
+    menuItems = menu.getComponents ();
+    if (keepVisibleIndex >= topFixedCount && keepVisibleIndex <= menuItems.length - bottomFixedCount && (keepVisibleIndex > firstIndex + scrollCount || keepVisibleIndex < firstIndex)) {
+        firstIndex = Math.min (firstIndex, keepVisibleIndex);
+        firstIndex = Math.max (firstIndex, keepVisibleIndex - scrollCount + 1);
+    }
+    if (menuItems.length > topFixedCount + scrollCount + bottomFixedCount) {
+        refreshMenu ();
+    }
+}",2,Compliant,0.72,Method appears focused on synchronizing menuItems/scroll window state and refreshing when needed.,2,Compliant,0.7,Control flow is simple and does not encode multiple behavioral variants.,2,Compliant,0.78,No method-level signals of tight coupling via direct instantiation or global singletons.,6,
+systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/testHistory/ExecutionLogResponderTest.java:24-30,fitnesse,systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/testHistory/ExecutionLogResponderTest.java,24,30,7,setUp,"public void setUp () throws IOException {
+    resultsDirectory = new File (""testHistoryDirectory"");
+    removeResultsDirectory ();
+    resultsDirectory.mkdir ();
+    context = FitNesseUtil.makeTestContext ();
+}",1,Partial,0.55,"Likely a test fixture setup method, but cohesion depends on the broader test class responsibilities.",1,Partial,0.6,"No clear extensibility point is encoded here; change risk mainly from hard-coded configuration, but context is limited.",1,Partial,0.55,"In a test setup, these may be acceptable; without class context it's unclear whether these are intended replaceable dependencies.",3,needs_more_context
+systems/Projects/commons-lang-master/src/test/java/org/apache/commons/lang3/ValidateTest.java:537-539,commons-lang,systems/Projects/commons-lang-master/src/test/java/org/apache/commons/lang3/ValidateTest.java,537,539,3,shouldNotThrowExceptionWhenValueIsBetweenBounds,"void shouldNotThrowExceptionWhenValueIsBetweenBounds () {
+    Validate.inclusiveBetween (LOWER_BOUND, UPPER_BOUND, 2);
+}",2,Compliant,0.9,,2,Compliant,0.85,,2,Compliant,0.8,,6,
+systems/Projects/junit5-main/junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestEngineRegistry.java:39-42,junit5,systems/Projects/junit5-main/junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/ServiceLoaderTestEngineRegistry.java,39,42,4,getLogger,"private static Logger getLogger () {
+    return LoggerFactory.getLogger (ServiceLoaderTestEngineRegistry.class);
+}",2,Compliant,0.9,,2,Compliant,0.85,,1,Partial,0.55,"needs_more_context: Whether LoggerFactory is an abstraction boundary in this codebase (e.g., facade) or a replaceable dependency cannot be determined from this method alone.",5,needs_more_context
+systems/Projects/jmeter-master/src/functions/src/main/java/org/apache/jmeter/functions/Jexl3Function.java:114-124,jmeter,systems/Projects/jmeter-master/src/functions/src/main/java/org/apache/jmeter/functions/Jexl3Function.java,114,124,11,createJexlEngine,"private static JexlEngine createJexlEngine () {
+    return new JexlBuilder ().cache (512).silent (true).strict (true).debug (false).create ();
+}",2,Compliant,0.9,,1,Partial,0.55,Configuration is embedded in the method; whether this is an extensibility concern depends on broader usage and configuration mechanisms.,0,Violated,0.75,,3,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/src/fitnesse/responders/testHistory/PageHistoryResponder.java:125-141,fitnesse,systems/Projects/SolidLeaning/fitnesse/src/fitnesse/responders/testHistory/PageHistoryResponder.java,125,141,17,generateHtmlTestExecutionResponse,"private Response generateHtmlTestExecutionResponse (Request request, TestExecutionReport report) throws Exception {
+    page.setTitle (""Test Execution Report"");
+    page.setNavTemplate (""viewNav"");
+    page.put (""viewLocation"", request.getResource ());
+    page.put (""testExecutionReport"", report);
+    if (! report.getExecutionLogs ().isEmpty ()) {
+        page.put (""resultDate"", dateFormat.format (report.getDate ()));
+    }
+    page.put (""ExecutionResult"", ExecutionResult.class);
+    page.setMainTemplate (""testExecutionReport"");
+    page.setErrorNavTemplate (""errorNavigator"");
+    String tags = report.getResults ().get (0).getTags ();
+    PageTitle pageTitle = new PageTitle (""Test History"", PathParser.parse (request.getResource ()), tags);
+    page.setPageTitle (pageTitle);
+    return makeResponse (request);
+}",1,Partial,0.55,"Appears to build/configure an HTML response, but whether these steps are a single cohesive responsibility depends on the surrounding class/page abstraction.",2,Compliant,0.7,No switch/else-if chains or repeated variant branches; change risk from hard-coded template strings exists but does not structurally encode multiple variants.,1,Partial,0.55,Cannot determine from the method alone whether PageTitle/PathParser are simple value/helpers (acceptable) or replaceable collaborators (would be tighter coupling).,4,needs_more_context
+systems/Projects/jmeter-master/src/protocol/jdbc/src/main/java/org/apache/jmeter/protocol/jdbc/AbstractJDBCTestElement.java:163-239,jmeter,systems/Projects/jmeter-master/src/protocol/jdbc/src/main/java/org/apache/jmeter/protocol/jdbc/AbstractJDBCTestElement.java,163,239,77,execute,"protected byte [] execute (Connection conn, SampleResult sample) throws SQLException, IOException, UnsupportedOperationException {
+    log.debug (""executing jdbc:{}"", getQuery ());
+    String currentQueryType = getQueryType ();
+    if (SELECT.equals (currentQueryType)) {
+        try (Statement stmt = conn.createStatement ()) {
+            setQueryTimeout (stmt, getIntegerQueryTimeout ());
+            configureMaxRows (stmt);
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery (getQuery ());
+                sample.latencyEnd ();
+                return getStringFromResultSet (rs).getBytes (ENCODING);
+            } finally {
+                close (rs);
+            }
+        }
+    }
+    else if (CALLABLE.equals (currentQueryType)) {
+        try (CallableStatement cstmt = getCallableStatement (conn)) {
+            int [] out = setArguments (cstmt);
+            boolean hasResultSet = cstmt.execute ();
+            sample.latencyEnd ();
+            String sb = resultSetsToString (cstmt, hasResultSet, out);
+            return sb.getBytes (ENCODING);
+        }
+    }
+    else if (UPDATE.equals (currentQueryType)) {
+        try (Statement stmt = conn.createStatement ()) {
+            setQueryTimeout (stmt, getIntegerQueryTimeout ());
+            stmt.executeUpdate (getQuery ());
+            sample.latencyEnd ();
+            int updateCount = stmt.getUpdateCount ();
+            String results = updateCount + "" updates"";
+            return results.getBytes (ENCODING);
+        }
+    }
+    else if (PREPARED_SELECT.equals (currentQueryType)) {
+        try (PreparedStatement pstmt = getPreparedStatement (conn)) {
+            setArguments (pstmt);
+            configureMaxRows (pstmt);
+            ResultSet rs = null;
+            try {
+                rs = pstmt.executeQuery ();
+                sample.latencyEnd ();
+                return getStringFromResultSet (rs).getBytes (ENCODING);
+            } finally {
+                close (rs);
+            }
+        }
+    }
+    else if (PREPARED_UPDATE.equals (currentQueryType)) {
+        try (PreparedStatement pstmt = getPreparedStatement (conn)) {
+            setArguments (pstmt);
+            pstmt.executeUpdate ();
+            sample.latencyEnd ();
+            String sb = resultSetsToString (pstmt, false, null);
+            return sb.getBytes (ENCODING);
+        }
+    }
+    else if (ROLLBACK.equals (currentQueryType)) {
+        conn.rollback ();
+        sample.latencyEnd ();
+        return ROLLBACK.getBytes (ENCODING);
+    }
+    else if (COMMIT.equals (currentQueryType)) {
+        conn.commit ();
+        sample.latencyEnd ();
+        return COMMIT.getBytes (ENCODING);
+    }
+    else if (AUTOCOMMIT_FALSE.equals (currentQueryType)) {
+        conn.setAutoCommit (false);
+        sample.latencyEnd ();
+        return AUTOCOMMIT_FALSE.getBytes (ENCODING);
+    }
+    else if (AUTOCOMMIT_TRUE.equals (currentQueryType)) {
+        conn.setAutoCommit (true);
+        sample.latencyEnd ();
+        return AUTOCOMMIT_TRUE.getBytes (ENCODING);
+    }
+    else {
+        throw new UnsupportedOperationException (""Unexpected query type: "" + currentQueryType);
+    }
+}",0,Violated,0.85,,0,Violated,0.9,,2,Compliant,0.75,,2,
+systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/WikiPageResponderTest.java:223-233,fitnesse,systems/Projects/SolidLeaning/fitnesse/test/fitnesse/responders/WikiPageResponderTest.java,223,233,11,testImportedPageIndication,"public void testImportedPageIndication () throws Exception {
+    final WikiPage page = WikiPageUtil.addPage (root, PathParser.parse (""SamplePage""));
+    final PageData data = page.getData ();
+    final WikiImportProperty importProperty = new WikiImportProperty (""blah"");
+    importProperty.addTo (data.getProperties ());
+    page.commit (data);
+    final String content = requestPage (""SamplePage"").getContent ();
+    assertSubString (""<body class=\""imported\"">"", content);
+}",1,Partial,0.55,"As a test method, this may be acceptable as a single scenario, but method-level cohesion depends on testing conventions and surrounding test structure.",2,Compliant,0.8,,1,Partial,0.6,Cannot determine from the method alone whether constructed/used types represent replaceable dependencies or simple domain/value objects.,4,needs_more_context
+systems/Projects/junit5-main/platform-tests/src/test/java/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilderTests.java:228-235,junit5,systems/Projects/junit5-main/platform-tests/src/test/java/org/junit/platform/launcher/core/LauncherDiscoveryRequestBuilderTests.java,228,235,8,exceptionForIllegalFilterClass,"void exceptionForIllegalFilterClass () {
+    Exception exception = assertThrows (PreconditionViolationException.class, () -> request ().filters (o -> excluded (""reason"")));
+    assertThat (exception).hasMessageStartingWith (""Filter"");
+    assertThat (exception).hasMessageEndingWith (""must implement EngineFilter, PostDiscoveryFilter, or DiscoveryFilter."");
+}",2,Compliant,0.78,,2,Compliant,0.7,,2,Compliant,0.74,,6,
+systems/Projects/junit5-main/platform-tests/src/test/java/org/junit/platform/launcher/core/LauncherConfigurationParametersTests.java:152-158,junit5,systems/Projects/junit5-main/platform-tests/src/test/java/org/junit/platform/launcher/core/LauncherConfigurationParametersTests.java,152,158,7,systemPropertyOverridesConfigFile,"void systemPropertyOverridesConfigFile () {
+    System.setProperty (KEY, SYSTEM_PROPERTY);
+    ConfigurationParameters configParams = fromMapAndFile (Map.of (), CONFIG_FILE_NAME);
+    assertThat (configParams.get (KEY)).contains (SYSTEM_PROPERTY);
+    assertThat (configParams.keySet ()).contains (KEY);
+    assertThat (configParams.toString ()).contains (CONFIG_FILE);
+}",2,Compliant,0.78,,2,Compliant,0.72,,1,Partial,0.55,"needs_more_context: As a test method, direct use of System properties may be acceptable; cannot determine whether fromMapAndFile introduces replaceable concrete dependencies.",5,needs_more_context
+systems/Projects/struts-main/core/src/test/java/org/apache/struts2/views/jsp/ui/ComponentTest.java:233-265,struts,systems/Projects/struts-main/core/src/test/java/org/apache/struts2/views/jsp/ui/ComponentTest.java,233,265,33,testWithParam_clearTagStateSet,"public void testWithParam_clearTagStateSet () throws Exception {
+    TestAction testAction = (TestAction) action;
+    testAction.setFoo (""bar"");
+    ComponentTag tag = new ComponentTag ();
+    tag.setPerformClearTagStateForTagPoolingServers (true);
+    tag.setPageContext (pageContext);
+    tag.setLabel (""mylabel"");
+    tag.setName (""myname"");
+    tag.setValue (""foo"");
+    tag.setTheme (""test"");
+    tag.setTemplate (""Component"");
+    tag.doStartTag ();
+    setComponentTagClearTagState (tag, true);
+    tag.getComponent ().addParameter (""hello"", ""world"");
+    tag.getComponent ().addParameter (""argle"", ""bargle"");
+    tag.getComponent ().addParameter (""glip"", ""glop"");
+    tag.getComponent ().addParameter (""array"", new String [] {""a"", ""b"", ""c""});
+    tag.getComponent ().addParameter (""objClass"", tag.getClass ().getName ());
+    tag.doEndTag ();
+    verify (ComponentTag.class.getResource (""Component-param.txt""));
+    ComponentTag freshTag = new ComponentTag ();
+    freshTag.setPerformClearTagStateForTagPoolingServers (true);
+    freshTag.setPageContext (pageContext);
+    assertTrue (""Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  "" + ""May indicate that clearTagStateForTagPoolingServers() calls are not working properly."", strutsBodyTagsAreReflectionEqual (tag, freshTag));
+}",2,Compliant,0.78,,2,Compliant,0.7,,1,Partial,0.55,"In a test method, direct instantiation may be acceptable, but method-level signal shows coupling to concrete ComponentTag; cannot determine broader injection/abstraction context.",5,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/test/fitnesse/wikitext/parser/WikiTranslatorTest.java:23-27,fitnesse,systems/Projects/SolidLeaning/fitnesse/test/fitnesse/wikitext/parser/WikiTranslatorTest.java,23,27,5,DefineVariableInAliasIsPreserved,"public void DefineVariableInAliasIsPreserved () throws Exception {
+    String content = ""[[${a}][${b}]]"";
+    String newContent = ParserTestHelper.roundTrip (new TestSourcePage (), content);
+    assertEquals (content, newContent);
+}",2,Compliant,0.78,,2,Compliant,0.7,,1,Partial,0.55,needs_more_context,5,needs_more_context
+systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/dialect/type/OracleUserDefinedTypeExporter.java:41-273,hibernate-orm,systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/dialect/type/OracleUserDefinedTypeExporter.java,41,273,233,getSqlCreateStrings,"public String [] getSqlCreateStrings (UserDefinedArrayType userDefinedType, Metadata metadata, SqlStringGenerationContext context) {
+    final QualifiedName typeName = new QualifiedNameParser.NameParts (Identifier.toIdentifier (userDefinedType.getCatalog (), userDefinedType.isCatalogQuoted ()), Identifier.toIdentifier (userDefinedType.getSchema (), userDefinedType.isSchemaQuoted ()), userDefinedType.getNameIdentifier ());
+    final String arrayTypeName = context.format (typeName);
+    final Integer arraySqlTypeCode = userDefinedType.getArraySqlTypeCode ();
+    final String elementType = userDefinedType.getElementTypeName ();
+    if (arraySqlTypeCode == null || arraySqlTypeCode == TABLE) {
+        return new String [] {""create or replace type "" + arrayTypeName + "" as table of "" + elementType};
+    }
+    final int arrayLength = userDefinedType.getArrayLength ();
+    final Integer elementSqlTypeCode = userDefinedType.getElementSqlTypeCode ();
+    final Integer elementDdlTypeCode = userDefinedType.getElementDdlTypeCode ();
+    final String jsonTypeName = metadata.getDatabase ().getTypeConfiguration ().getDdlTypeRegistry ().getTypeName (SqlTypes.JSON, dialect);
+    final String valueExpression = determineValueExpression (""t.value"", elementSqlTypeCode, elementDdlTypeCode, elementType);
+    final String jsonElementType = determineJsonElementType (elementSqlTypeCode, elementDdlTypeCode, elementType);
+    final boolean isBooleanType = elementType.equalsIgnoreCase (""boolean"");
+    return new String [] {""create or replace type "" + arrayTypeName + "" as varying array("" + arrayLength + "") of "" + elementType, ""create or replace function "" + arrayTypeName + ""_cmp(a in "" + arrayTypeName + "", b in "" + arrayTypeName + "") return number deterministic is begin "" + ""if a is null or b is null then return null; end if; "" + ""for i in 1 .. least(a.count,b.count) loop "" + ""if a(i) is null or b(i) is null then return null;"" + ""elsif a(i)>b(i) then return 1;"" + ""elsif a(i)<b(i) then return -1; "" + ""end if; "" + ""end loop; "" + ""if a.count=b.count then return 0; elsif a.count>b.count then return 1; else return -1; end if; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_distinct(a in "" + arrayTypeName + "", b in "" + arrayTypeName + "") return number deterministic is begin "" + ""if a is null and b is null then return 0; end if; "" + ""if a is null or b is null or a.count <> b.count then return 1; end if; "" + ""for i in 1 .. a.count loop "" + ""if (a(i) is null)<>(b(i) is null) or a(i)<>b(i) then return 1; end if; "" + ""end loop; "" + ""return 0; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_position(arr in "" + arrayTypeName + "", elem in "" + getRawTypeName (elementType) + "", startPos in number default 1) return number deterministic is begin "" + ""if arr is null then return null; end if; "" + ""if elem is null then "" + ""for i in startPos .. arr.count loop "" + ""if arr(i) is null then return i; end if; "" + ""end loop; "" + ""else "" + ""for i in startPos .. arr.count loop "" + ""if arr(i)=elem then return i; end if; "" + ""end loop; "" + ""end if; "" + ""return 0; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_length(arr in "" + arrayTypeName + "") return number deterministic is begin "" + ""if arr is null then return null; end if; "" + ""return arr.count; "" + ""end;"", createOrReplaceConcatFunction (arrayTypeName), ""create or replace function "" + arrayTypeName + ""_includes(haystack in "" + arrayTypeName + "", needle in "" + arrayTypeName + "", nullable in number) return number deterministic is found number(1,0); begin "" + ""if haystack is null or needle is null then return null; end if; "" + ""for i in 1 .. needle.count loop "" + ""found := 0; "" + ""for j in 1 .. haystack.count loop "" + ""if nullable = 1 and needle(i) is null and haystack(j) is null or needle(i)=haystack(j) then found := 1; exit; end if; "" + ""end loop; "" + ""if found = 0 then return 0; end if;"" + ""end loop; "" + ""return 1; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_intersects(haystack in "" + arrayTypeName + "", needle in "" + arrayTypeName + "", nullable in number) return number deterministic is begin "" + ""if haystack is null or needle is null then return null; end if; "" + ""if needle.count = 0 then return 1; end if; "" + ""for i in 1 .. needle.count loop "" + ""for j in 1 .. haystack.count loop "" + ""if nullable = 1 and needle(i) is null and haystack(j) is null or needle(i)=haystack(j) then return 1; end if; "" + ""end loop; "" + ""end loop; "" + ""return 0; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_get(arr in "" + arrayTypeName + "", idx in number) return "" + getRawTypeName (elementType) + "" deterministic is begin "" + ""if arr is null or idx is null or arr.count < idx then return null; end if; "" + ""return arr(idx); "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_set(arr in "" + arrayTypeName + "", idx in number, elem in "" + getRawTypeName (elementType) + "") return "" + arrayTypeName + "" deterministic is "" + ""res "" + arrayTypeName + "":="" + arrayTypeName + ""(); begin "" + ""if arr is not null then "" + ""for i in 1 .. arr.count loop "" + ""res.extend; "" + ""res(i) := arr(i); "" + ""end loop; "" + ""for i in arr.count+1 .. idx loop "" + ""res.extend; "" + ""end loop; "" + ""else "" + ""for i in 1 .. idx loop "" + ""res.extend; "" + ""end loop; "" + ""end if; "" + ""res(idx) := elem; "" + ""return res; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_remove(arr in "" + arrayTypeName + "", elem in "" + getRawTypeName (elementType) + "") return "" + arrayTypeName + "" deterministic is "" + ""res "" + arrayTypeName + "":="" + arrayTypeName + ""(); begin "" +
+      ""if arr is null then return null; end if; "" + ""if elem is null then "" + ""for i in 1 .. arr.count loop "" + ""if arr(i) is not null then res.extend; res(res.last) := arr(i); end if; "" + ""end loop; "" + ""else "" + ""for i in 1 .. arr.count loop "" + ""if arr(i) is null or arr(i)<>elem then res.extend; res(res.last) := arr(i); end if; "" + ""end loop; "" + ""end if; "" + ""return res; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_remove_index(arr in "" + arrayTypeName + "", idx in number) return "" + arrayTypeName + "" deterministic is "" + ""res "" + arrayTypeName + "":="" + arrayTypeName + ""(); begin "" + ""if arr is null or idx is null then return arr; end if; "" + ""for i in 1 .. arr.count loop "" + ""if i<>idx then res.extend; res(res.last) := arr(i); end if; "" + ""end loop; "" + ""return res; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_slice(arr in "" + arrayTypeName + "", startIdx in number, endIdx in number) return "" + arrayTypeName + "" deterministic is "" + ""res "" + arrayTypeName + "":="" + arrayTypeName + ""(); begin "" + ""if arr is null or startIdx is null or endIdx is null then return null; end if; "" + ""for i in startIdx .. least(arr.count,endIdx) loop "" + ""res.extend; res(res.last) := arr(i); "" + ""end loop; "" + ""return res; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_replace(arr in "" + arrayTypeName + "", old in "" + getRawTypeName (elementType) + "", elem in "" + getRawTypeName (elementType) + "") return "" + arrayTypeName + "" deterministic is "" + ""res "" + arrayTypeName + "":="" + arrayTypeName + ""(); begin "" + ""if arr is null then return null; end if; "" + ""if old is null then "" + ""for i in 1 .. arr.count loop "" + ""res.extend; "" + ""res(res.last) := coalesce(arr(i),elem); "" + ""end loop; "" + ""else "" + ""for i in 1 .. arr.count loop "" + ""res.extend; "" + ""if arr(i) = old then "" + ""res(res.last) := elem; "" + ""else "" + ""res(res.last) := arr(i); "" + ""end if; "" + ""end loop; "" + ""end if; "" + ""return res; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_trim(arr in "" + arrayTypeName + "", elems number) return "" + arrayTypeName + "" deterministic is "" + ""res "" + arrayTypeName + "":="" + arrayTypeName + ""(); begin "" + ""if arr is null or elems is null then return null; end if; "" + ""if arr.count < elems then raise_application_error (-20000, 'number of elements to trim must be between 0 and '||arr.count); end if;"" + ""for i in 1 .. arr.count-elems loop "" + ""res.extend; "" + ""res(i) := arr(i); "" + ""end loop; "" + ""return res; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_fill(elem in "" + getRawTypeName (elementType) + "", elems number) return "" + arrayTypeName + "" deterministic is "" + ""res "" + arrayTypeName + "":="" + arrayTypeName + ""(); begin "" + ""if elems is null then return null; end if; "" + ""if elems<0 then raise_application_error (-20000, 'number of elements must be greater than or equal to 0'); end if;"" + ""for i in 1 .. elems loop "" + ""res.extend; "" + ""res(i) := elem; "" + ""end loop; "" + ""return res; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_positions(arr in "" + arrayTypeName + "", elem in "" + getRawTypeName (elementType) + "") return sdo_ordinate_array deterministic is "" + ""res sdo_ordinate_array:=sdo_ordinate_array(); begin "" + ""if arr is null then return null; end if; "" + ""if elem is null then "" + ""for i in 1 .. arr.count loop "" + ""if arr(i) is null then res.extend; res(res.last):=i; end if; "" + ""end loop; "" + ""else "" + ""for i in 1 .. arr.count loop "" + ""if arr(i)=elem then res.extend; res(res.last):=i; end if; "" + ""end loop; "" + ""end if; "" + ""return res; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_to_string(arr in "" + arrayTypeName + "", sep in varchar2, nullVal in varchar2) return varchar2 deterministic is "" + ""res varchar2(4000):=''; begin "" + ""if arr is null or sep is null then return null; end if; "" + ""for i in 1 .. arr.count loop "" + ""if arr(i) is not null then "" + ""if length(res)<>0 then res:=res||sep; end if; "" + (! isBooleanType ? ""res:=res||arr(i); "" : ""if arr(i) then res:=res||'true'; else res:=res||'false'; end if; "") +
+      ""elsif nullVal is not null then "" + ""if length(res)<>0 then res:=res||sep; end if; "" + ""res:=res||nullVal; "" + ""end if; "" + ""end loop; "" + ""return res; "" + ""end;"", ""create or replace function "" + arrayTypeName + ""_from_json(arr in "" + jsonTypeName + "") return "" + arrayTypeName + "" deterministic is "" + ""res "" + arrayTypeName + "":="" + arrayTypeName + ""(); begin "" + ""if arr is null then return null; end if; "" + ""select "" + valueExpression + "" bulk collect into res "" + ""from json_table(arr,'$[*]' columns (value "" + jsonElementType + "" path '$')) t; "" + ""return res; "" + ""end;""};
+}",0,Violated,0.85,,0,Violated,0.8,,1,Partial,0.55,needs_more_context: cannot determine whether QualifiedNameParser.NameParts is a simple value/helper or a replaceable collaborator; also 'dialect' is referenced but not shown (likely a field).,1,needs_more_context
+systems/Projects/selenium-trunk/java/src/org/openqa/selenium/grid/web/JarFileResource.java:89-104,selenium,systems/Projects/selenium-trunk/java/src/org/openqa/selenium/grid/web/JarFileResource.java,89,104,16,list,"public Set < Resource > list () {
+    if (! isDirectory ()) {
+        return ImmutableSet.of ();
+    }
+    String prefix = entryName.endsWith (""/"") ? entryName : entryName + ""/"";
+    int count = prefix.split (""/"").length + 1;
+    return jarFile.stream ().filter (e -> e.getName ().startsWith (prefix)).filter (e -> ! e.getName ().equals (entryName)).filter (e -> ! e.getName ().equals (prefix)).filter (e -> e.getName ().split (""/"").length == count).map (e -> new JarFileResource (jarFile, e.getName (), prefix)).collect (ImmutableSet.toImmutableSet ());
+}",2,Compliant,0.78,,2,Compliant,0.7,,1,Partial,0.55,needs_more_context: cannot determine whether JarFileResource is a replaceable collaborator or simply the value/object type being listed.,5,needs_more_context
+systems/Projects/junit5-main/junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.java:84-90,junit5,systems/Projects/junit5-main/junit-platform-engine/src/main/java/org/junit/platform/engine/support/hierarchical/ForkJoinPoolHierarchicalTestExecutorService.java,84,90,7,ForkJoinPoolHierarchicalTestExecutorService,"ForkJoinPoolHierarchicalTestExecutorService (ParallelExecutionConfiguration configuration, TaskEventListener taskEventListener) {
+    forkJoinPool = createForkJoinPool (configuration);
+    this.taskEventListener = taskEventListener;
+    parallelism = forkJoinPool.getParallelism ();
+    LoggerFactory.getLogger (getClass ()).config (() -> ""Using ForkJoinPool with parallelism of "" + parallelism);
+}",1,Partial,0.55,Constructor mixes object initialization with logging; whether logging is considered part of the single responsibility depends on broader class conventions.,2,Compliant,0.75,,0,Violated,0.8,Static logger factory usage introduces a hard dependency on the logging implementation.,3,needs_more_context
+systems/Projects/jmeter-master/src/components/src/main/java/org/apache/jmeter/visualizers/backend/graphite/GraphiteBackendListenerClient.java:301-331,jmeter,systems/Projects/jmeter-master/src/components/src/main/java/org/apache/jmeter/visualizers/backend/graphite/GraphiteBackendListenerClient.java,301,331,31,setupTest,"public void setupTest (BackendListenerContext context) throws Exception {
+    String graphiteMetricsSenderClass = context.getParameter (GRAPHITE_METRICS_SENDER);
+    String graphiteHost = context.getParameter (GRAPHITE_HOST);
+    int graphitePort = context.getIntParameter (GRAPHITE_PORT, DEFAULT_PLAINTEXT_PROTOCOL_PORT);
+    summaryOnly = context.getBooleanParameter (SUMMARY_ONLY, true);
+    samplersList = context.getParameter (SAMPLERS_LIST, """");
+    useRegexpForSamplersList = context.getBooleanParameter (USE_REGEXP_FOR_SAMPLERS_LIST, false);
+    String rootMetricsPrefix = context.getParameter (ROOT_METRICS_PREFIX, DEFAULT_METRICS_PREFIX);
+    String [] percentilesStringArray = context.getParameter (PERCENTILES, DEFAULT_METRICS_PREFIX).split (SEPARATOR);
+    okPercentiles = new HashMap < > (percentilesStringArray.length);
+    koPercentiles = new HashMap < > (percentilesStringArray.length);
+    allPercentiles = new HashMap < > (percentilesStringArray.length);
+    Arrays.stream (percentilesStringArray).map (String :: trim).filter (StringUtils :: isNotEmpty).forEach (this :: initPercentileMaps);
+    Class < ? > clazz = Class.forName (graphiteMetricsSenderClass);
+    this.graphiteMetricsManager = (GraphiteMetricsSender) clazz.getDeclaredConstructor ().newInstance ();
+    graphiteMetricsManager.setup (graphiteHost, graphitePort, rootMetricsPrefix);
+    if (useRegexpForSamplersList) {
+        pattern = Pattern.compile (samplersList);
+    }
+    else {
+        String [] samplers = samplersList.split (SEPARATOR);
+        samplersToFilter = new HashSet < > ();
+        Collections.addAll (samplersToFilter, samplers);
+    }
+    scheduler = Executors.newScheduledThreadPool (MAX_POOL_SIZE);
+    this.timerHandle = scheduler.scheduleAtFixedRate (this, SEND_INTERVAL, SEND_INTERVAL, TimeUnit.SECONDS);
+}",0,Violated,0.75,"Method mixes configuration parsing, reflection-based component creation, filter setup, and thread scheduling.",1,Partial,0.55,"Only a single if/else branch is present; reflection suggests extension via configuration, but whether this is a stable extensibility mechanism requires more context.",0,Violated,0.8,"Method constructs key runtime collaborators internally (scheduler and metrics sender), reducing replaceability via injection.",1,needs_more_context
+systems/Projects/struts-main/plugins/tiles/src/main/java/org/apache/tiles/web/jsp/taglib/InsertDefinitionTag.java:243-256,struts,systems/Projects/struts-main/plugins/tiles/src/main/java/org/apache/tiles/web/jsp/taglib/InsertDefinitionTag.java,243,256,14,doTag,"public void doTag () throws JspException, IOException {
+    AutotagRuntime < org.apache.tiles.request.Request > runtime = new org.apache.tiles.request.jsp.autotag.JspAutotagRuntime ();
+    if (runtime instanceof SimpleTagSupport) {
+        SimpleTagSupport tag = (SimpleTagSupport) runtime;
+        tag.setJspContext (getJspContext ());
+        tag.setJspBody (getJspBody ());
+        tag.setParent (getParent ());
+        tag.doTag ();
+    }
+    org.apache.tiles.request.Request request = runtime.createRequest ();
+    ModelBody modelBody = runtime.createModelBody ();
+    model.execute (definitionName, template, templateType, templateExpression, role, preparer, flush, request, modelBody);
+}",1,Partial,0.55,Method mixes runtime/tag setup/execution with request/body creation and a model execution call; whether these are one cohesive responsibility depends on surrounding class/tag contract.,2,Compliant,0.7,No switch/else-if chains or policy constants; extension risk within this method appears low.,0,Violated,0.85,"Method is tightly coupled to a specific runtime implementation and JSP tag support type, reducing replaceability.",3,needs_more_context
+systems/Projects/struts-main/core/src/test/java/org/apache/struts2/views/jsp/ui/FieldErrorTagTest.java:96-114,struts,systems/Projects/struts-main/core/src/test/java/org/apache/struts2/views/jsp/ui/FieldErrorTagTest.java,96,114,19,testWithoutParamsWithoutFieldErrors_clearTagStateSet,"public void testWithoutParamsWithoutFieldErrors_clearTagStateSet () throws Exception {
+    FieldErrorTag tag = new FieldErrorTag ();
+    ((InternalAction) action).setHaveFieldErrors (false);
+    tag.setPerformClearTagStateForTagPoolingServers (true);
+    tag.setPageContext (pageContext);
+    tag.doStartTag ();
+    setComponentTagClearTagState (tag, true);
+    tag.doEndTag ();
+    verify (FieldErrorTagTest.class.getResource (""fielderror-2.txt""));
+    FieldErrorTag freshTag = new FieldErrorTag ();
+    freshTag.setPerformClearTagStateForTagPoolingServers (true);
+    freshTag.setPageContext (pageContext);
+    assertTrue (""Tag state after doEndTag() and explicit tag state clearing is inequal to new Tag with pageContext/parent set.  "" + ""May indicate that clearTagStateForTagPoolingServers() calls are not working properly."", strutsBodyTagsAreReflectionEqual (tag, freshTag));
+}",2,Compliant,0.72,,2,Compliant,0.7,,1,Partial,0.55,"In a test method, direct construction may be acceptable; without broader context it's unclear whether FieldErrorTag is a replaceable collaborator or just the unit under test.",5,needs_more_context
+systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/metamodel/internal/RuntimeMetamodelsImpl.java:48-50,hibernate-orm,systems/Projects/hibernate-orm-main/hibernate-core/src/main/java/org/hibernate/metamodel/internal/RuntimeMetamodelsImpl.java,48,50,3,getIdentifierPropertyName,"public String getIdentifierPropertyName (String className) throws MappingException {
+    return mappingMetamodel.getEntityDescriptor (className).getIdentifierPropertyName ();
+}",2,Compliant,0.9,,2,Compliant,0.85,,1,Partial,0.55,"Cannot determine from the method alone whether mappingMetamodel is an abstraction (interface) or a concrete, replaceable dependency.",5,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/src/fitnesse/testsystems/slim/SlimTestSystem.java:141-198,fitnesse,systems/Projects/SolidLeaning/fitnesse/src/fitnesse/testsystems/slim/SlimTestSystem.java,141,198,58,evaluateTables,"protected void evaluateTables (List < SlimAssertion > assertions, Map < String, Object > instructionResults) throws SlimCommunicationException {
+    boolean IgnoreTestTable = false;
+    for (SlimAssertion a : assertions) {
+        final String key = a.getInstruction ().getId ();
+        Object returnValue = instructionResults.get (key);
+        if (! ignoreAllTestsCalled) {
+            if (returnValue != null && returnValue.toString ().contains (EXCEPTION_IGNORE_ALL_TESTS_TAG)) {
+                ignoreAllTestsCalled = IgnoreTestTable = true;
+            }
+            else if (returnValue != null && returnValue.toString ().contains (EXCEPTION_IGNORE_SCRIPT_TEST_TAG)) {
+                IgnoreTestTable = true;
+            }
+            else if (IgnoreTestTable) {
+                returnValue = ""IGNORE_SCRIPT_TEST"";
+            }
+        }
+        else {
+            returnValue = ""IGNORE_SCRIPT_TEST"";
+        }
+        if (returnValue != null && returnValue instanceof String && ((String) returnValue).startsWith (EXCEPTION_TAG)) {
+            SlimExceptionResult exceptionResult = new SlimExceptionResult (key, (String) returnValue);
+            if (exceptionResult.isStopTestException ()) {
+                stopTestCalled = true;
+                stopSuiteCalled = PageData.SUITE_SETUP_NAME.equals (testContext.getPageToTest ().getName ());
+            }
+            if (exceptionResult.isStopSuiteException ()) {
+                stopTestCalled = stopSuiteCalled = true;
+            }
+            exceptionResult = a.getExpectation ().evaluateException (exceptionResult);
+            if (exceptionResult != null) {
+                if (! exceptionResult.isCatchException ()) testExceptionOccurred (a, exceptionResult);
+                else testAssertionVerified (a, exceptionResult.catchTestResult ());
+            }
+        }
+        else {
+            TestResult testResult = a.getExpectation ().evaluateExpectation (returnValue);
+            testAssertionVerified (a, testResult);
+            if (testResult != null) {
+                Map < String, ? > variables = testResult.getVariablesToStore ();
+                if (variables != null) {
+                    List < Instruction > instructions = new ArrayList < > (variables.size ());
+                    int i = 0;
+                    for (Entry < String, ? > variable : variables.entrySet ()) {
+                        instructions.add (new AssignInstruction (""assign_"" + i ++, variable.getKey (), variable.getValue ()));
+                    }
+                    if (i > 0) {
+                        slimClient.invokeAndGetResponse (instructions);
+                    }
+                }
+            }
+        }
+    }
+}",0,Violated,0.78,,0,Violated,0.74,,0,Violated,0.7,,0,
+systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/testbeans/gui/ComboStringEditor.java:110-145,jmeter,systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/testbeans/gui/ComboStringEditor.java,110,145,36,ComboStringEditor,"ComboStringEditor (String [] pTags, boolean noEdit, boolean noUndefined, ResourceBundle rb) {
+    tags = pTags == null ? ArrayUtils.EMPTY_STRING_ARRAY : pTags.clone ();
+    model = new DefaultComboBoxModel < > ();
+    if (rb != null && tags.length > 0) {
+        validTranslations = new HashMap < > ();
+        for (String tag : this.tags) {
+            validTranslations.put (tag, rb.getString (tag));
+        }
+    }
+    else {
+        validTranslations = null;
+    }
+    if (! noUndefined) {
+        model.addElement (UNDEFINED);
+    }
+    if (tags.length == 0) {
+        this.minTagIndex = Integer.MAX_VALUE;
+        this.maxTagIndex = Integer.MIN_VALUE;
+    }
+    else {
+        this.minTagIndex = model.getSize ();
+        for (String tag : this.tags) {
+            model.addElement (translate (tag));
+        }
+        this.maxTagIndex = model.getSize ();
+    }
+    if (! noEdit) {
+        model.addElement (EDIT);
+    }
+    combo = new JComboBox < > (model);
+    combo.addItemListener (this);
+    combo.setEditable (false);
+}",1,Partial,0.55,"Constructor performs several setup steps (data cloning, optional translation map creation, model population, UI component creation/config). Whether these are a single cohesive responsibility depends on class role; needs_more_context.",1,Partial,0.6,"Branching is moderate (not a 3+ variant chain) but encodes configuration-driven behavior and sentinel options; extensibility impact is unclear without broader context (e.g., how options evolve).",0,Violated,0.85,"Method constructs concrete Swing components/models directly, creating tight coupling to specific implementations (replaceability limited).",2,needs_more_context
+systems/Projects/struts-main/core/src/main/java/org/apache/struts2/text/AbstractLocalizedTextProvider.java:111-133,struts,systems/Projects/struts-main/core/src/main/java/org/apache/struts2/text/AbstractLocalizedTextProvider.java,111,133,23,findDefaultText,"public String findDefaultText (String textKey, Locale locale) {
+    List < String > localList = getCurrentBundleNames ();
+    for (String bundleName : localList) {
+        ResourceBundle bundle = findResourceBundle (bundleName, locale);
+        if (bundle != null) {
+            reloadBundles ();
+            try {
+                return bundle.getString (textKey);
+            } catch (MissingResourceException e) {
+            }
+        }
+    }
+    if (devMode) {
+        LOG.warn (""Missing key [{}] in bundles [{}]!"", textKey, localList);
+    }
+    else {
+        LOG.debug (""Missing key [{}] in bundles [{}]!"", textKey, localList);
+    }
+    return null;
+}",0,Violated,0.75,"Method mixes retrieval, cache/refresh side effects, and logging.",1,Partial,0.55,"Only a single if/else branch is present; unclear if future variants (e.g., different logging/lookup policies) would require modifying this method.",2,Compliant,0.7,Method does not create concrete service dependencies; remaining dependencies appear to be provided via fields/methods.,3,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/src/fit/decorator/util/Table.java:126-128,fitnesse,systems/Projects/SolidLeaning/fitnesse/src/fit/decorator/util/Table.java,126,128,3,newParse,"private Parse newParse (Parse columns, Parse nextColumn) {
+    return new Parse (stripAngularBrackets (columns.tag), columns.body, columns.parts, nextColumn);
+}",2,Compliant,0.78,,2,Compliant,0.72,,1,Partial,0.55,Instantiation may be fine if Parse is a simple data structure; more context about Parse's role is needed.,5,needs_more_context
+systems/Projects/jmeter-master/src/components/src/test/java/org/apache/jmeter/visualizers/TestSampleCompareTo.java:51-53,jmeter,systems/Projects/jmeter-master/src/components/src/test/java/org/apache/jmeter/visualizers/TestSampleCompareTo.java,51,53,3,sample,"private Sample sample (long count) {
+    return new Sample (""dummy"", 0L, 0L, 0L, 0L, 0L, 0.0, 0L, true, count, 0L);
+}",2,Compliant,0.78,,1,Partial,0.55,needs_more_context,1,Partial,0.6,needs_more_context,4,needs_more_context
+systems/Projects/SolidLeaning/fitnesse/src/fitnesse/testsystems/slim/results/SlimExceptionResult.java:114-140,fitnesse,systems/Projects/SolidLeaning/fitnesse/src/fitnesse/testsystems/slim/results/SlimExceptionResult.java,114,140,27,translateExceptionMessage,"private String translateExceptionMessage (String exceptionMessage) {
+    String [] tokens = exceptionMessage.split ("" "");
+    switch (tokens [0]) {
+        case COULD_NOT_INVOKE_CONSTRUCTOR :
+            return ""Could not invoke constructor for "" + tokens [1];
+        case NO_METHOD_IN_CLASS :
+            if (tokens.length == 3) {
+                return String.format (""Method %s not found in %s"", tokens [1], tokens [2]);
+            }
+            else {
+                return exceptionMessage.substring (exceptionMessage.indexOf ("" "") + 1);
+            }
+        case NO_CONSTRUCTOR :
+            return String.format (""Could not find constructor for %s"", tokens [1]);
+        case NO_CONVERTER_FOR_ARGUMENT_NUMBER :
+            return String.format (""No converter for %s"", tokens [1]);
+        case NO_INSTANCE :
+            return String.format (""The instance %s does not exist"", tokens [1]);
+        case NO_CLASS :
+            return String.format (""Could not find class %s"", tokens [1]);
+        case MALFORMED_INSTRUCTION :
+            return String.format (""The instruction %s is malformed"", exceptionMessage.substring (exceptionMessage.indexOf ("" "") + 1));
+        case TIMED_OUT :
+            return String.format (""The instruction timed out after %s seconds"", tokens [1]);
+        default :
+            return exceptionMessage;
+    }
+}",2,Compliant,0.78,,0,Violated,0.86,,2,Compliant,0.9,,4,
+systems/Projects/struts-main/core/src/main/java/org/apache/struts2/util/finder/ResourceFinder.java:1115-1158,struts,systems/Projects/struts-main/core/src/main/java/org/apache/struts2/util/finder/ResourceFinder.java,1115,1158,44,findPackagesMap,"public Map < URL, Set < String > > findPackagesMap (String uri) throws IOException {
+    String basePath = path + uri;
+    LOG.trace (""    basePath(initial): "" + basePath);
+    if (! basePath.endsWith (""/"")) {
+        basePath += ""/"";
+    }
+    LOG.trace (""    basePath(final): "" + basePath);
+    Enumeration < URL > urlsForURI = getResources (basePath);
+    Map < URL, Set < String > > result = new HashMap < > ();
+    if (urlsForURI == null) {
+        LOG.trace (""Null resources URL enumeration for [{}], should not be possible!"", uri);
+        throw new IllegalStateException (""Null resources URL enumeration produced for uri: "" + uri);
+    }
+    if (! urlsForURI.hasMoreElements ()) {
+        LOG.debug (""    urls enumeration for basePath is empty ?"");
+    }
+    while (urlsForURI.hasMoreElements ()) {
+        URL location = urlsForURI.nextElement ();
+        LOG.debug (""       url (location): "" + location);
+        try {
+            if (""jar"".equals (location.getProtocol ())) {
+                Set < String > resources = new HashSet < > ();
+                readJarDirectoryEntries (location, basePath, resources);
+                result.put (location, convertPathsToPackages (resources));
+            }
+            else if (""file"".equals (location.getProtocol ())) {
+                Set < String > resources = new HashSet < > ();
+                readSubDirectories (new File (location.toURI ()), uri, resources);
+                result.put (location, convertPathsToPackages (resources));
+            }
+        } catch (Exception e) {
+            LOG.debug (""Got exception finding subpackages for {}"", uri, e);
+        }
+    }
+    return result;
+}",1,Partial,0.55,"needs_more_context: Method appears to orchestrate multiple steps (path normalization, resource enumeration, protocol handling, conversion, logging). Whether this is a single cohesive responsibility depends on class-level design expectations.",1,Partial,0.6,needs_more_context: Only two branches are present; unclear if additional protocols are expected or handled elsewhere.,2,Compliant,0.75,Method does not directly create replaceable service collaborators; uses existing methods and JDK types.,4,needs_more_context
+systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/report/config/ReportGeneratorConfiguration.java:142-211,jmeter,systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/report/config/ReportGeneratorConfiguration.java,142,211,70,initialize,"public void initialize (String exportId, ExporterConfiguration exportConfiguration) throws ConfigurationException {
+    log.debug (""Load configuration for exporter '{}'"", exportId);
+    String className = getRequiredProperty (props, getExporterPropertyKey (exportId, SUBCONF_KEY_CLASSNAME), """", String.class);
+    log.debug (""Using class:'{}' for exporter:'{}'"", className, exportId);
+    exportConfiguration.setClassName (className);
+    boolean filtersOnlySampleSeries = getRequiredProperty (props, getExporterPropertyKey (exportId, EXPORTER_KEY_FILTERS_ONLY_SAMPLE_SERIES), EXPORTER_KEY_FILTERS_ONLY_SAMPLE_SERIES_DEFAULT, Boolean.class);
+    exportConfiguration.filtersOnlySampleSeries (filtersOnlySampleSeries);
+    String seriesFilter = getRequiredProperty (props, getExporterPropertyKey (exportId, EXPORTER_KEY_SERIES_FILTER), EXPORTER_KEY_SERIES_FILTER_DEFAULT, String.class);
+    exportConfiguration.setSeriesFilter (seriesFilter);
+    boolean showControllerSeriesOnly = getRequiredProperty (props, getExporterPropertyKey (exportId, EXPORTER_KEY_SHOW_CONTROLLERS_ONLY), EXPORTER_KEY_SHOW_CONTROLLERS_ONLY_DEFAULT, Boolean.class);
+    exportConfiguration.showControllerSeriesOnly (showControllerSeriesOnly);
+    Map < String, SubConfiguration > graphExtraConfigurations = exportConfiguration.getGraphExtraConfigurations ();
+    loadSubConfiguration (graphExtraConfigurations, props, getSubConfigurationPropertyKey (REPORT_GENERATOR_EXPORTER_KEY_PREFIX, exportId, EXPORTER_KEY_GRAPH_EXTRA_OPTIONS), true, new SubConfigurationFactory < SubConfiguration > () {
+        @Override
+        public SubConfiguration createSubConfiguration () {
+            return new SubConfiguration ();
+        }@Override
+        public void initialize (String subConfId, SubConfiguration subConfiguration) {
+        }
+    }
+    );
+}",2,Compliant,0.72,,1,Partial,0.55,needs_more_context,1,Partial,0.6,needs_more_context,4,needs_more_context
+systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/util/XPathUtil.java:375-413,jmeter,systems/Projects/jmeter-master/src/core/src/main/java/org/apache/jmeter/util/XPathUtil.java,375,413,39,putValuesForXPathInList,"public static void putValuesForXPathInList (Document document, String xPathQuery, List < ? super String > matchStrings, boolean fragment, int matchNumber) throws TransformerException {
+    String val = null;
+    XObject xObject = XPathAPI.eval (document, xPathQuery, getPrefixResolver (document));
+    final int objectType = xObject.getType ();
+    if (objectType == XObject.CLASS_NODESET) {
+        NodeList matches = xObject.nodelist ();
+        int length = matches.getLength ();
+        int indexToMatch = matchNumber;
+        if (matchNumber == 0 && length > 0) {
+            indexToMatch = JMeterUtils.getRandomInt (length) + 1;
+        }
+        for (int i = 0; i < length; i ++) {
+            Node match = matches.item (i);
+            if (indexToMatch >= 0 && indexToMatch != (i + 1)) {
+                continue;
+            }
+            if (match instanceof Element) {
+                if (fragment) {
+                    val = getNodeContent (match);
+                }
+                else {
+                    val = getValueForNode (match);
+                }
+            }
+            else {
+                val = match.getNodeValue ();
+            }
+            matchStrings.add (val);
+        }
+    }
+    else if (objectType == XObject.CLASS_NULL || objectType == XObject.CLASS_UNKNOWN || objectType == XObject.CLASS_UNRESOLVEDVARIABLE) {
+        if (log.isWarnEnabled ()) {
+            log.warn (""Unexpected object type: {} returned for: {}"", xObject.getTypeString (), xPathQuery);
+        }
+    }
+    else {
+        val = xObject.toString ();
+        matchStrings.add (val);
+    }
+}",1,Partial,0.55,Method appears to both compute/extract values and handle unexpected cases via logging; whether this is a single cohesive responsibility depends on surrounding class conventions.,0,Violated,0.75,Adding new XObject types or node handling behaviors would likely require modifying this method due to explicit conditional logic.,1,Partial,0.6,"No direct instantiation of replaceable collaborators, but reliance on static APIs/logging suggests tighter coupling; whether this violates DIP depends on how these are managed in the wider system.",2,needs_more_context
+systems/Projects/commons-lang-master/src/test/java/org/apache/commons/lang3/text/StrBuilderTest.java:865-899,commons-lang,systems/Projects/commons-lang-master/src/test/java/org/apache/commons/lang3/text/StrBuilderTest.java,865,899,35,testIndexOf_String_int,"public void testIndexOf_String_int () {
+    StrBuilder sb = new StrBuilder (""abab"");
+    assertEquals (0, sb.indexOf (""a"", - 1));
+    assertEquals (0, sb.indexOf (""a"", 0));
+    assertEquals (2, sb.indexOf (""a"", 1));
+    assertEquals (2, sb.indexOf (""a"", 2));
+    assertEquals (- 1, sb.indexOf (""a"", 3));
+    assertEquals (- 1, sb.indexOf (""a"", 4));
+    assertEquals (- 1, sb.indexOf (""a"", 5));
+    assertEquals (- 1, sb.indexOf (""abcdef"", 0));
+    assertEquals (0, sb.indexOf ("""", 0));
+    assertEquals (1, sb.indexOf ("""", 1));
+    assertEquals (""abab"".indexOf (""a"", 1), sb.indexOf (""a"", 1));
+    assertEquals (2, sb.indexOf (""ab"", 1));
+    assertEquals (""abab"".indexOf (""ab"", 1), sb.indexOf (""ab"", 1));
+    assertEquals (3, sb.indexOf (""b"", 2));
+    assertEquals (""abab"".indexOf (""b"", 2), sb.indexOf (""b"", 2));
+    assertEquals (1, sb.indexOf (""ba"", 1));
+    assertEquals (""abab"".indexOf (""ba"", 2), sb.indexOf (""ba"", 2));
+    assertEquals (- 1, sb.indexOf (""z"", 2));
+    sb = new StrBuilder (""xyzabc"");
+    assertEquals (2, sb.indexOf (""za"", 0));
+    assertEquals (- 1, sb.indexOf (""za"", 3));
+    assertEquals (- 1, sb.indexOf ((String) null, 2));
+}",2,Compliant,0.85,,2,Compliant,0.8,,1,Partial,0.55,"Instantiation may be acceptable for a test fixture/value-like object, but replaceability/coupling cannot be determined from the method alone.",5,needs_more_context
+systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/cfg/CoercionConfigs.java:161-252,jackson-databind,systems/Projects/jackson-databind-2.19/src/main/java/com/fasterxml/jackson/databind/cfg/CoercionConfigs.java,161,252,92,findCoercion,"public CoercionAction findCoercion (DeserializationConfig config, LogicalType targetType, Class < ? > targetClass, CoercionInputShape inputShape) {
+    if ((_perClassCoercions != null) && (targetClass != null)) {
+        MutableCoercionConfig cc = _perClassCoercions.get (targetClass);
+        if (cc != null) {
+            CoercionAction act = cc.findAction (inputShape);
+            if (act != null) {
+                return act;
+            }
+        }
+    }
+    if ((_perTypeCoercions != null) && (targetType != null)) {
+        MutableCoercionConfig cc = _perTypeCoercions [targetType.ordinal ()];
+        if (cc != null) {
+            CoercionAction act = cc.findAction (inputShape);
+            if (act != null) {
+                return act;
+            }
+        }
+    }
+    CoercionAction act = _defaultCoercions.findAction (inputShape);
+    if (act != null) {
+        return act;
+    }
+    switch (inputShape) {
+        case EmptyArray :
+            return config.isEnabled (DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT) ? CoercionAction.AsNull : CoercionAction.Fail;
+        case Float :
+            if (targetType == LogicalType.Integer) {
+                return config.isEnabled (DeserializationFeature.ACCEPT_FLOAT_AS_INT) ? CoercionAction.TryConvert : CoercionAction.Fail;
+            }
+            break;
+        case Integer :
+            if (targetType == LogicalType.Enum) {
+                if (config.isEnabled (DeserializationFeature.FAIL_ON_NUMBERS_FOR_ENUMS)) {
+                    return CoercionAction.Fail;
+                }
+            }
+            break;
+        default :
+    }
+    final boolean baseScalar = _isScalarType (targetType);
+    if (baseScalar && ! config.isEnabled (MapperFeature.ALLOW_COERCION_OF_SCALARS) && (targetType != LogicalType.Float || inputShape != CoercionInputShape.Integer)) {
+        return CoercionAction.Fail;
+    }
+    if (inputShape == CoercionInputShape.EmptyString) {
+        if (targetType == LogicalType.OtherScalar) {
+            return CoercionAction.TryConvert;
+        }
+        if (baseScalar || config.isEnabled (DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)) {
+            return CoercionAction.AsNull;
+        }
+        return CoercionAction.Fail;
+    }
+    return _defaultAction;
+}",2,Compliant,0.72,,0,Violated,0.78,,2,Compliant,0.8,,4,
+systems/Projects/jmeter-master/src/protocol/http/src/test/java/org/apache/jmeter/protocol/http/control/TestCookieManagerThreadIteration.java:146-210,jmeter,systems/Projects/jmeter-master/src/protocol/http/src/test/java/org/apache/jmeter/protocol/http/control/TestCookieManagerThreadIteration.java,146,210,65,testCookieManagerWhenThreadIterationIsSameUser,"public void testCookieManagerWhenThreadIterationIsSameUser () throws NoSuchFieldException, IllegalAccessException {
+    jmvars.putObject (SAME_USER, true);
+    jmctx.setVariables (jmvars);
+    CookieManager cookieManagerDynamic = new CookieManager ();
+    cookieManagerDynamic.setThreadContext (jmctx);
+    cookieManagerDynamic.getCookies ().clear ();
+    cookieManagerDynamic.testStarted ();
+    Cookie cookieDynamic = new Cookie ();
+    cookieDynamic.setName (DYNAMIC_COOKIE);
+    cookieManagerDynamic.getCookies ().addItem (cookieDynamic);
+    cookieManagerDynamic.setControlledByThread (true);
+    Field privateStringField = CookieManager.class.getDeclaredField (""initialCookies"");
+    privateStringField.setAccessible (true);
+    CookieManager cookieManagerStatic = new CookieManager ();
+    Cookie cookieStatic = new Cookie ();
+    cookieStatic.setName (STATIC_COOKIE);
+    cookieManagerStatic.getCookies ().addItem (cookieStatic);
+    CollectionProperty initialCookies = cookieManagerStatic.getCookies ();
+    privateStringField.set (cookieManagerDynamic, initialCookies);
+    assertEquals (1, cookieManagerDynamic.getCookies ().size (), ""Before the iteration,the quantity of cookies should be 1"");
+    assertEquals (DYNAMIC_COOKIE, cookieManagerDynamic.getCookies ().get (0).getName (), ""Before the iteration, the value of cookie should be what user have set"");
+    cookieManagerDynamic.testIterationStart (null);
+    assertEquals (DYNAMIC_COOKIE, cookieManagerDynamic.getCookies ().get (0).getName (), ""After the iteration, the value of cookie should be what user have set"");
+    assertEquals (1, cookieManagerDynamic.getCookies ().size (), ""After the iteration, the quantity of cookies should be 1"");
+    jmvars.putObject (SAME_USER, false);
+    jmctx.setVariables (jmvars);
+    cookieManagerDynamic.setControlledByThread (false);
+    cookieManagerDynamic.getCookies ().clear ();
+    cookieManagerDynamic.testStarted ();
+    cookieDynamic.setName (DYNAMIC_COOKIE);
+    cookieManagerDynamic.getCookies ().addItem (cookieDynamic);
+    cookieManagerDynamic.setClearEachIteration (false);
+    cookieManagerStatic.getCookies ().clear ();
+    cookieStatic.setName (STATIC_COOKIE);
+    privateStringField.set (cookieManagerDynamic, initialCookies);
+    assertEquals (DYNAMIC_COOKIE, cookieManagerDynamic.getCookies ().get (0).getName (), ""Before the iteration, the value of cookie should be what user have set"");
+    assertEquals (1, cookieManagerDynamic.getCookies ().size (), ""Before the iteration,the quantity of cookies should be 1"");
+    cookieManagerDynamic.testIterationStart (null);
+    assertEquals (DYNAMIC_COOKIE, cookieManagerDynamic.getCookies ().get (0).getName (), ""After the iteration, the value of cookie should be what user have set"");
+    assertEquals (1, cookieManagerDynamic.getCookies ().size (), ""After the iteration, the quantity of cookies should be 1"");
+}",0,Violated,0.75,"Method performs multiple responsibilities: scenario setup for two modes, reflection-based injection, and verification for each scenario.",1,Partial,0.55,"As a test method, modification is expected when adding scenarios; unclear if this represents an extensibility point. Flagging uncertainty.",0,Violated,0.8,Method is tightly coupled to concrete types and internal structure; dependencies are not inverted.,1,needs_more_context
+systems/Projects/jmeter-master/src/protocol/http/src/main/java/org/apache/jmeter/protocol/http/gui/AuthPanel.java:236-282,jmeter,systems/Projects/jmeter-master/src/protocol/http/src/main/java/org/apache/jmeter/protocol/http/gui/AuthPanel.java,236,282,47,actionPerformed,"public void actionPerformed (ActionEvent e) {
+    String action = e.getActionCommand ();
+    if (action.equals (CONTROLLED_BY_THREADGROUP)) {
+        clearEachIteration.setEnabled (! controlledByThreadGroup.isSelected ());
+    }
+    if (action.equals (DELETE_COMMAND)) {
+        deleteRows ();
+    }
+    else if (action.equals (ADD_COMMAND)) {
+        GuiUtils.stopTableEditing (authTable);
+        tableModel.addNewRow ();
+        tableModel.fireTableDataChanged ();
+        checkButtonsStatus ();
+        int rowToSelect = tableModel.getRowCount () - 1;
+        authTable.setRowSelectionInterval (rowToSelect, rowToSelect);
+    }
+    else if (action.equals (LOAD_COMMAND)) {
+        try {
+            final String [] _txt = {"".txt""};
+            final JFileChooser dialog = FileDialoger.promptToOpenFile (_txt);
+            if (dialog != null) {
+                tableModel.manager.addFile (dialog.getSelectedFile ().getAbsolutePath ());
+                tableModel.fireTableDataChanged ();
+                checkButtonsStatus ();
+            }
+        } catch (IOException ex) {
+            log.error (""Error loading auth data"", ex);
+        }
+    }
+    else if (action.equals (SAVE_COMMAND)) {
+        try {
+            final JFileChooser chooser = FileDialoger.promptToSaveFile (""auth.txt"");
+            if (chooser != null) {
+                tableModel.manager.save (chooser.getSelectedFile ().getAbsolutePath ());
+            }
+        } catch (IOException ex) {
+            JMeterUtils.reportErrorToUser (ex.getMessage (), ""Error saving auth data"");
+        }
+    }
+}",0,Violated,0.85,,0,Violated,0.8,,0,Violated,0.75,,0,
+systems/Projects/SolidLeaning/fitnesse/test/fit/decorator/performance/MaxTimeTest.java:43-47,fitnesse,systems/Projects/SolidLeaning/fitnesse/test/fit/decorator/performance/MaxTimeTest.java,43,47,5,testSetupDecoratorShouldAddMaxTimeToSummary,"public void testSetupDecoratorShouldAddMaxTimeToSummary () throws Exception {
+    decorator.setupDecorator (new String [] {""80""});
+    assertEquals (80, ((Long) decorator.summary.get (MaxTime.MAX_TIME)).longValue ());
+}",2,Compliant,0.78,,2,Compliant,0.7,,2,Compliant,0.74,,6,
