@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DIP Rubric Clarification — Round 3</title>
+<style>
+  body { font-family: -apple-system, system-ui, "Segoe UI", sans-serif; max-width: 880px; margin: 24px auto; padding: 0 32px; color: #222; line-height: 1.55; }
+  h1 { font-size: 22px; }
+  h2 { font-size: 18px; border-bottom: 2px solid #2469d4; padding-bottom: 4px; margin-top: 28px; }
+  h3 { font-size: 15px; margin-bottom: 6px; margin-top: 18px; }
+  .rubric-box { background: #f4f7fb; border-left: 3px solid #2469d4; padding: 12px 16px; margin: 12px 0; font-size: 14px; }
+  .rubric-box ul { margin: 6px 0 0 18px; padding: 0; }
+  .rubric-box li { margin-bottom: 4px; }
+  pre.code { background: #1e1e1e; color: #e8e8e8; padding: 12px; border-radius: 4px; overflow-x: auto; font-size: 13px; line-height: 1.45; }
+  .example { border: 1px solid #ccc; border-radius: 6px; padding: 14px 18px; margin: 16px 0; background: white; }
+  .example .score { font-weight: 600; color: #2469d4; font-size: 14px; margin: 4px 0 8px; }
+  .example .reason { font-size: 13.5px; margin-top: 8px; }
+  .not-violation { background: #f0fff0; border-left: 3px solid #4a9; padding: 10px 14px; margin: 10px 0; font-size: 13.5px; }
+  .is-violation { background: #fff4f4; border-left: 3px solid #c44; padding: 10px 14px; margin: 10px 0; font-size: 13.5px; }
+  .common-mistake { background: #fff8e1; border-left: 3px solid #d4a017; padding: 10px 14px; margin: 10px 0; font-size: 13.5px; }
+  .instructions { background: #fafafa; border: 1px solid #ddd; padding: 14px 18px; border-radius: 6px; }
+  ul.tight li { margin-bottom: 3px; }
+</style>
+</head>
+<body>
+
+<h1>DIP Rubric Clarification — Round 3 Annotation</h1>
+
+<p style="font-size:13.5px; color:#555;">
+Refinement of the Dependency Inversion Principle scoring criteria, based on
+PI review of round-1 and round-2 annotations. This addendum does not change
+the rubric; it clarifies how the existing criteria apply to common method-level
+patterns in Java.
+</p>
+
+<h2>1. Rubric — DIP scoring criteria (unchanged)</h2>
+
+<div class="rubric-box">
+  <strong>DIP (Dependency Inversion Principle), method-level scoring:</strong>
+  <ul>
+    <li><strong>0 — Violated:</strong> The method instantiates a replaceable collaborator or service directly, uses a static singleton for replaceable behaviour, or contains strong framework coupling that hard-codes a low-level implementation choice.</li>
+    <li><strong>1 — Partial / Uncertain:</strong> The method instantiates a type with <code>new</code> or otherwise creates a dependency, but it is unclear from the method alone whether the type is a replaceable collaborator (DIP=0 territory) or a value/helper/utility type (DIP=2 territory).</li>
+    <li><strong>2 — Compliant:</strong> The method has no replaceable dependencies (its dependencies arrive as parameters or fields, or it instantiates only value types, exceptions, JDK utilities, or collections), or its dependencies are injected from outside.</li>
+  </ul>
+</div>
+
+<h2>2. What DIP is actually asking</h2>
+
+<p>
+The Dependency Inversion Principle is about whether a method <strong>hard-codes
+the choice of a replaceable collaborator</strong>. The key word is <em>replaceable</em>.
+A collaborator is replaceable if there is a plausible alternative implementation
+that a different application would want to plug in.
+</p>
+
+<p>
+A real-world example: a method that needs to send an email could use
+<code>SmtpMailSender</code>, <code>SendgridMailSender</code>, or a fake one for
+testing. The mailer is replaceable. If the method writes
+<code>new SmtpMailSender()</code> directly, that is a DIP violation —
+it has hard-coded a low-level choice.
+</p>
+
+<p>
+By contrast, a method that needs to count items in a list using
+<code>new ArrayList&lt;&gt;()</code> is not making a "replaceable collaborator"
+choice. <code>ArrayList</code> is a value-like container; there is no
+"alternative <code>ArrayList</code> implementation" the method would plausibly
+swap to. This is not a DIP violation.
+</p>
+
+<h2>3. What is NOT a DIP violation</h2>
+
+<p>The following patterns are <strong>not DIP violations</strong> at method
+level, regardless of how many <code>new</code> keywords appear:</p>
+
+<div class="not-violation">
+<strong>(a) Collections, maps, sets, and arrays.</strong><br>
+<code>new ArrayList&lt;&gt;()</code>, <code>new HashMap&lt;&gt;()</code>,
+<code>new HashSet&lt;&gt;()</code>, <code>new TreeMap&lt;&gt;()</code>,
+<code>new String[size]</code>. These are containers, not replaceable services.
+</div>
+
+<div class="not-violation">
+<strong>(b) Value types, DTOs, records, and primitives.</strong><br>
+<code>new String("...")</code>, <code>new Integer(...)</code>,
+<code>new BigDecimal(...)</code>, <code>new Date()</code>, and any
+data-holding object that the method <em>creates</em> rather than <em>collaborates with</em>.
+A user-defined record or POJO is in this category if it carries data
+rather than behaviour.
+</div>
+
+<div class="not-violation">
+<strong>(c) Exceptions.</strong><br>
+<code>throw new IllegalArgumentException(...)</code>,
+<code>throw new IOException(...)</code>,
+<code>new RuntimeException(message, cause)</code>. Exception types are not
+replaceable collaborators; they are part of the method's contract.
+</div>
+
+<div class="not-violation">
+<strong>(d) JDK static utilities.</strong><br>
+<code>Files.copy(...)</code>, <code>Files.readAllBytes(...)</code>,
+<code>Arrays.asList(...)</code>, <code>Objects.requireNonNull(...)</code>,
+<code>String.format(...)</code>, <code>Math.max(...)</code>,
+<code>Collections.unmodifiableList(...)</code>. These are namespaced functions,
+not services with alternative implementations.
+</div>
+
+<div class="not-violation">
+<strong>(e) Local helpers and iterators.</strong><br>
+Small private helper objects that the method constructs and discards within
+its own scope. If the helper is not visible outside the method, it is not
+a replaceable collaborator.
+</div>
+
+<div class="not-violation">
+<strong>(f) Constructor / factory bodies.</strong><br>
+A method whose entire job is to construct an object often instantiates several
+other objects as part of that construction. This is the method's job, not a
+DIP violation. Builders, factories, and constructors get a pass here.
+</div>
+
+<h2>4. What IS a DIP violation</h2>
+
+<p>The following patterns <strong>are</strong> DIP violations at method
+level:</p>
+
+<div class="is-violation">
+<strong>(a) Direct instantiation of a service or collaborator.</strong><br>
+<code>new EmailService()</code>, <code>new DatabaseConnection(url)</code>,
+<code>new HttpClient()</code>, <code>new PaymentGateway()</code>. Each of
+these has plausible alternative implementations the method could plug in
+via a parameter or injected field. Hard-coding the choice is DIP=0.
+</div>
+
+<div class="is-violation">
+<strong>(b) Static singleton access to replaceable behaviour.</strong><br>
+<code>MailSender.getInstance().send(...)</code>,
+<code>DatabaseRegistry.getInstance().getConnection()</code>.
+The static-singleton pattern locks the method to one implementation.
+This is DIP=0.
+</div>
+
+<div class="is-violation">
+<strong>(c) Tightly coupled framework implementation choices.</strong><br>
+<code>new MyAppSpecificRepository()</code> when the method ought to depend
+on a <code>Repository</code> interface. The method is hard-coding a low-level
+choice the framework could otherwise abstract.
+</div>
+
+<h2>5. Worked examples — the canonical patterns</h2>
+
+<div class="example">
+<h3>Example A — DIP = 2 (Compliant)</h3>
+<pre class="code">public BigDecimal totalPrice(List&lt;LineItem&gt; items) {
+    BigDecimal total = BigDecimal.ZERO;
+    for (LineItem item : items) {
+        total = total.add(item.price());
+    }
+    return total;
+}</pre>
+<div class="score">Score: 2</div>
+<p class="reason">
+No replaceable dependencies. The method takes a list as a parameter
+(dependency arrives from outside), uses <code>BigDecimal.ZERO</code>
+(value type), and calls a method on the parameter. There is no
+<code>new</code> at all, and even if <code>BigDecimal.ZERO</code> were
+<code>new BigDecimal(0)</code>, that is a value type — not a DIP concern.
+</p>
+</div>
+
+<div class="example">
+<h3>Example B — DIP = 0 (Violated)</h3>
+<pre class="code">public void notifyCustomer(String email, String message) {
+    SmtpMailSender sender = new SmtpMailSender("mail.example.com", 587);
+    sender.send(email, message);
+}</pre>
+<div class="score">Score: 0</div>
+<p class="reason">
+The method directly instantiates a specific mail-sending service.
+<code>SmtpMailSender</code> is a replaceable collaborator — the method
+could equally well use a <code>SendgridMailSender</code> or a test fake.
+By instantiating it directly, the method hard-codes the low-level choice.
+This is the canonical DIP violation Martin describes.
+</p>
+</div>
+
+<div class="example">
+<h3>Example C — DIP = 2 (Compliant)</h3>
+<pre class="code">public void notifyCustomer(MailSender sender, String email, String message) {
+    sender.send(email, message);
+}</pre>
+<div class="score">Score: 2</div>
+<p class="reason">
+Same intent as Example B, but the mailer arrives as a parameter. The
+method depends on an abstraction (or at least on something injected from
+outside). The caller chooses the implementation. No DIP violation.
+</p>
+</div>
+
+<div class="example">
+<h3>Example D — DIP = 0 (Violated, static-singleton form)</h3>
+<pre class="code">public void recordOrder(Order order) {
+    DatabaseRegistry.getInstance().save(order);
+}</pre>
+<div class="score">Score: 0</div>
+<p class="reason">
+The method reaches into a global static singleton for a replaceable
+collaborator (the database). There is no way for a caller to substitute
+a different database, an in-memory test version, or a mock. This is
+DIP=0 even though no <code>new</code> appears in the method body.
+</p>
+</div>
+
+<div class="example">
+<h3>Example E — DIP = 2 (Compliant, despite multiple <code>new</code>)</h3>
+<pre class="code">public List&lt;String&gt; readLines(Path file) throws IOException {
+    List&lt;String&gt; result = new ArrayList&lt;&gt;();
+    for (String line : Files.readAllLines(file)) {
+        result.add(line.trim());
+    }
+    return result;
+}</pre>
+<div class="score">Score: 2</div>
+<p class="reason">
+<code>new ArrayList&lt;&gt;()</code> is a collection, not a replaceable
+collaborator. <code>Files.readAllLines</code> is a JDK static utility,
+not a replaceable service. The method has zero DIP violations even though
+it allocates and calls a static API.
+</p>
+</div>
+
+<div class="example">
+<h3>Example F — DIP = 1 (Uncertain)</h3>
+<pre class="code">public Report generate(ReportRequest request) {
+    Formatter formatter = new Formatter();
+    return formatter.format(request);
+}</pre>
+<div class="score">Score: 1</div>
+<p class="reason">
+The method instantiates a <code>Formatter</code>. Without seeing the
+class definition, we cannot tell whether <code>Formatter</code> is a
+replaceable service (in which case DIP=0) or a thin local helper
+(in which case DIP=2). The name is generic, and the constructor takes
+no arguments. <strong>When the method alone does not give us enough
+signal, the rubric tells us to score 1.</strong>
+</p>
+</div>
+
+<div class="example">
+<h3>Example G — DIP = 2 (Compliant constructor)</h3>
+<pre class="code">public Customer(String name, String email) {
+    this.name = Objects.requireNonNull(name);
+    this.email = Objects.requireNonNull(email);
+    this.createdAt = Instant.now();
+}</pre>
+<div class="score">Score: 2</div>
+<p class="reason">
+A constructor body. The method's job is to construct an object.
+<code>Objects.requireNonNull</code> is a JDK utility,
+<code>Instant.now()</code> is a static factory for a value type. No
+replaceable collaborators are hard-coded.
+</p>
+</div>
+
+<div class="example">
+<h3>Example H — DIP = 0 (Violated, exception-disguised)</h3>
+<pre class="code">public Connection openConnection() {
+    return new MySqlConnection("jdbc:mysql://prod-db:3306/orders");
+}</pre>
+<div class="score">Score: 0</div>
+<p class="reason">
+The method instantiates a specific connection implementation with a
+hard-coded URL. The connection type is replaceable (could be
+<code>PostgresConnection</code>, <code>H2Connection</code> for tests, etc.).
+Both the choice of implementation AND the choice of database URL are
+hard-coded inside the method.
+</p>
+</div>
+
+<h2>6. Common boundary mistakes to avoid</h2>
+
+<div class="common-mistake">
+<strong>(a) Treating "any <code>new</code>" as DIP violation.</strong><br>
+The <code>new</code> keyword alone does not violate DIP. The question is
+<em>what is being instantiated</em>. Collections, value types, exceptions,
+and helpers are fine. Replaceable services are not.
+</div>
+
+<div class="common-mistake">
+<strong>(b) Marking 0 when the type's role is unclear.</strong><br>
+If the method instantiates <code>SomeHelper</code> and you cannot tell from
+the method alone whether <code>SomeHelper</code> is a replaceable service or
+a value object, the rubric says to score 1, not 0. Save score 0 for cases
+where the violation is clear from the method's text.
+</div>
+
+<div class="common-mistake">
+<strong>(c) Treating chained method calls on parameters as DIP violations.</strong><br>
+<code>logicalConnection.afterStatement()</code> where <code>logicalConnection</code>
+is a parameter is not a DIP violation — the dependency arrived from outside.
+The method is depending on whatever the caller passed in.
+</div>
+
+<div class="common-mistake">
+<strong>(d) Treating exceptions as DIP violations.</strong><br>
+<code>throw new IllegalArgumentException(...)</code> is part of the method's
+contract, not a replaceable collaborator. Exception construction never
+counts as DIP=0.
+</div>
+
+<div class="common-mistake">
+<strong>(e) Treating static JDK calls as DIP violations.</strong><br>
+<code>Files.copy(...)</code>, <code>Arrays.sort(...)</code>,
+<code>Objects.requireNonNull(...)</code>, <code>Math.min(...)</code>,
+<code>String.format(...)</code> are namespaced functions, not services.
+They do not count.
+</div>
+
+<h2>7. Decision rule (quick reference)</h2>
+
+<p>When scoring a method on DIP, ask in order:</p>
+<ol class="tight" style="font-size:14px;">
+  <li>Does the method create or call any object that has plausible alternative implementations another application would want to plug in?</li>
+  <li>If yes, is that object instantiated <em>inside the method</em> with <code>new</code>, accessed via a <em>static singleton</em>, or arrived as a <em>parameter / field</em>?</li>
+  <li>Instantiated inside or static singleton → <strong>score 0</strong>. Arrived from outside → <strong>score 2</strong>.</li>
+  <li>If the type's role is unclear from the method alone → <strong>score 1</strong>.</li>
+  <li>If the method has no objects matching the description in (1) at all → <strong>score 2</strong>.</li>
+</ol>
+
+<h2>8. Re-annotation instructions</h2>
+
+<div class="instructions">
+<p><strong>Important:</strong></p>
+<ul>
+  <li>Re-score <strong>only the DIP column</strong> for each of the 200 methods. SRP and OCP scores from round 2 are final.</li>
+  <li>Score <strong>independently</strong>. Do not look at the other rater's scores. Do not look at your own round-1 or round-2 scores either.</li>
+  <li>Apply the decision rule in §7 to each method.</li>
+  <li>When in doubt, score 1. Score 1 is the right answer when the method alone does not give you enough signal.</li>
+  <li>Use the comment field for unusual cases.</li>
+  <li>Allow 1–2 minutes per method. Total time should be around 3–4 hours.</li>
+</ul>
+</div>
+
+</body>
+</html>
